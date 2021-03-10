@@ -13,7 +13,7 @@ import 'package:cmsc4303_lesson3/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(Lesson3());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
