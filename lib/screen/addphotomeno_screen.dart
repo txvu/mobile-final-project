@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photomeno.dart';
+import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddPhotoMemoScreen extends StatefulWidget {
   static const routeName = '/addphotomeno_screen';
@@ -15,8 +18,10 @@ class AddPhotoMemoScreen extends StatefulWidget {
 class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
   _Controller controller;
   User user = FirebaseAuth.instance.currentUser;
+  List<PhotoMemo> photoMemoList;
   GlobalKey<FormState> formKey = GlobalKey();
   File photo;
+  String progressMessage;
 
   @override
   void initState() {
@@ -28,6 +33,8 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Map args = ModalRoute.of(context).settings.arguments;
+    photoMemoList ??= args[Constant.ARG_PHOTOMEMOLIST];
     return Scaffold(
       appBar: AppBar(
         title: Text('Add PhotoMemo'),
@@ -83,6 +90,14 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
                   ),
                 ],
               ),
+              progressMessage == null
+                  ? SizedBox(
+                      height: 1.0,
+                    )
+                  : Text(
+                      progressMessage,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
               TextFormField(
                 decoration: InputDecoration(
                   hintText: 'Title',
@@ -125,9 +140,54 @@ class _Controller {
 
   PhotoMemo tempMemo = PhotoMemo();
 
-  void save() {
+  void save() async {
     if (!state.formKey.currentState.validate()) return;
     state.formKey.currentState.save();
+
+    MyDialog.circularProgressStart(state.context);
+
+    try {
+      Map photoInfo = await FirebaseController.uploadPhotoFile(
+        photo: state.photo,
+        uid: state.user.uid,
+        listener: (double progress) {
+          state.render(() {
+            if (progress == null)
+              state.progressMessage = null;
+            else {
+              progress *= 100;
+              state.progressMessage =
+                  'Uploading ' + progress.toStringAsFixed(1) + '%';
+            }
+          });
+        },
+      );
+
+      // image labels by ML
+      state.render(() => state.progressMessage = 'ML Image Labeler Started!');
+      List<String> imageLabels = await FirebaseController.getimageLabels(photoFile: state.photo);
+      state.render(() => state.progressMessage = null);
+
+      tempMemo.photoFileName = photoInfo[Constant.ARG_FILE_NAME];
+      tempMemo.photoURL = photoInfo[Constant.ARG_DOWNLOAD_URL];
+      tempMemo.timestamp = DateTime.now();
+      tempMemo.createdBy = state.user.email;
+      tempMemo.imageLabels = imageLabels;
+      String tempDocId = await FirebaseController.addPhotoMemo(tempMemo);
+      tempMemo.docId = tempDocId;
+      state.photoMemoList.insert(0, tempMemo);
+
+      MyDialog.circularProgressStop(state.context);
+
+      Navigator.pop(state.context);
+    } catch (e) {
+      MyDialog.circularProgressStop(state.context);
+      MyDialog.info(
+        context: state.context,
+        title: 'Save PhotoMemo Error',
+        content: '$e',
+      );
+    }
   }
 
   void saveTitle(String value) {
@@ -145,7 +205,23 @@ class _Controller {
     }
   }
 
-  void getPhoto(String src) {
-
+  void getPhoto(String src) async {
+    try {
+      PickedFile _imageFile;
+      var _picker = ImagePicker();
+      if (src == Constant.SRC_CAMERA) {
+        _imageFile = await _picker.getImage(source: ImageSource.camera);
+      } else {
+        _imageFile = await _picker.getImage(source: ImageSource.gallery);
+      }
+      if (_imageFile == null) return; // cancel when selecting
+      state.render(() => state.photo = File(_imageFile.path));
+    } catch (e) {
+      MyDialog.info(
+        context: state.context,
+        title: 'Failed to get picture',
+        content: '$e',
+      );
+    }
   }
 }
