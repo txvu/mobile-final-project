@@ -1,4 +1,7 @@
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
+import 'package:cmsc4303_lesson3/model/constant.dart';
+import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
+import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +54,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 onSaved: controller.savePassword,
               ),
               ElevatedButton(
-                child: Text('Sign In', style: Theme.of(context).textTheme.button,),
+                child: Text(
+                  'Sign In',
+                  style: Theme.of(context).textTheme.button,
+                ),
                 onPressed: controller.signIn,
               )
             ],
@@ -71,33 +77,49 @@ class _Controller {
   String password;
 
   String validateEmail(String value) {
-    if (value.contains('@') && value.contains('.')) return null;
-    else return 'Invalid email address';
+    if (value.contains('@') && value.contains('.'))
+      return null;
+    else
+      return 'Invalid email address';
   }
+
   String validatePassword(String value) {
-    if (value.length < 6) return 'Too short';
-    else return null;
+    if (value.length < 6)
+      return 'Too short';
+    else
+      return null;
   }
 
   void saveEmail(String value) {
     email = value;
   }
+
   void savePassword(String value) {
     password = value;
   }
 
   void signIn() async {
-    if (!state.formKey.currentState.validate()) return ;
+    if (!state.formKey.currentState.validate()) return;
 
     state.formKey.currentState.save();
 
     User user;
 
+    MyDialog.circularProgressStart(state.context);
+
     try {
       user = await FirebaseController.signIn(email: email, password: password);
       print('user::: ${user.email} ::: ${user.metadata}');
     } catch (e) {
-
+      MyDialog.circularProgressStop(state.context);
+      MyDialog.info(
+        context: state.context,
+        title: 'Sign In Error',
+        content: e.toString(),
+      );
+      return;
     }
+    MyDialog.circularProgressStop(state.context);
+    Navigator.pushNamed(state.context, UserHomeScreen.routeName, arguments: {Constant.ARG_USER: user});
   }
 }

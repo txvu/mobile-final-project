@@ -9,4 +9,8 @@ class FirebaseController {
 
      return userCredential.user;
   }
+
+  static Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
 }
