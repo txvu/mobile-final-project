@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
-import 'package:cmsc4303_lesson3/model/photomeno.dart';
+import 'package:cmsc4303_lesson3/model/photomemo.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

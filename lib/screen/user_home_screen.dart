@@ -1,7 +1,8 @@
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
-import 'package:cmsc4303_lesson3/model/photomeno.dart';
+import 'package:cmsc4303_lesson3/model/photomemo.dart';
 import 'package:cmsc4303_lesson3/screen/addphotomeno_screen.dart';
+import 'package:cmsc4303_lesson3/screen/detailedview_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -83,6 +84,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       Text('Updated At: ${photoMemoList[index].timestamp}'),
                     ],
                   ),
+                  onTap: () => controller.onTap(index),
                 ),
               ),
       ),
@@ -112,5 +114,16 @@ class _Controller {
       Constant.ARG_PHOTOMEMOLIST: state.photoMemoList,
     });
     state.render(() {}); // render the scrren
+  }
+
+  void onTap(int index) async {
+    await Navigator.pushNamed(
+      state.context,
+      DetailedViewScreen.routeName,
+      arguments: {
+        Constant.ARG_USER: state.user,
+        Constant.ARG_ONE_PHOTOMEMO: state.photoMemoList[index]
+      },
+    );
   }
 }
