@@ -113,7 +113,7 @@ class _Controller {
       Constant.ARG_USER: state.user,
       Constant.ARG_PHOTOMEMOLIST: state.photoMemoList,
     });
-    state.render(() {}); // render the scrren
+    state.render(() {}); // render the screen
   }
 
   void onTap(int index) async {

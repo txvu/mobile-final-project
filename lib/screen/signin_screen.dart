@@ -2,6 +2,7 @@ import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photomemo.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
+import 'package:cmsc4303_lesson3/screen/signup_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,37 +32,63 @@ class _SignInScreenState extends State<SignInScreen> {
       appBar: AppBar(
         title: Text('Sign In'),
       ),
-      body: Form(
-        key: formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Email',
+      body: Padding(
+        padding: const EdgeInsets.only(top: 10.0, left: 15.0, right: 15.0),
+        child: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text(
+                  'PhotoMemo',
+                  style: TextStyle(fontFamily: 'Lobster', fontSize: 40.0),
                 ),
-                keyboardType: TextInputType.emailAddress,
-                autocorrect: false,
-                validator: controller.validateEmail,
-                onSaved: controller.saveEmail,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Password',
+                Text(
+                  'Sign in, please!',
+                  style: TextStyle(
+                    fontFamily: 'Lobster',
+                  ),
                 ),
-                obscureText: true,
-                autocorrect: false,
-                validator: controller.validatePassword,
-                onSaved: controller.savePassword,
-              ),
-              ElevatedButton(
-                child: Text(
-                  'Sign In',
-                  style: Theme.of(context).textTheme.button,
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  autocorrect: false,
+                  validator: controller.validateEmail,
+                  onSaved: controller.saveEmail,
                 ),
-                onPressed: controller.signIn,
-              )
-            ],
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Password',
+                  ),
+                  obscureText: true,
+                  autocorrect: false,
+                  validator: controller.validatePassword,
+                  onSaved: controller.savePassword,
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                ElevatedButton(
+                  child: Text(
+                    'Sign In',
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                  onPressed: controller.signIn,
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                ElevatedButton(
+                  child: Text(
+                    'Create a new account',
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                  onPressed: controller.signUp,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -140,5 +167,9 @@ class _Controller {
       );
       print(e);
     }
+  }
+
+  void signUp() {
+    Navigator.pushNamed(state.context, SignUpScreen.routeName);
   }
 }

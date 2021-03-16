@@ -20,6 +20,15 @@ class FirebaseController {
     return userCredential.user;
   }
 
+  static Future<void> createNewAccount(
+      {@required String email, @required String password}) async {
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
   static Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
   }
