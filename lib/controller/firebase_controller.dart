@@ -48,7 +48,8 @@ class FirebaseController {
       // listener(progress);
     });
     await task;
-    String downloadURL = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+    String downloadURL =
+        await FirebaseStorage.instance.ref(fileName).getDownloadURL();
     return <String, String>{
       Constant.ARG_DOWNLOAD_URL: downloadURL,
       Constant.ARG_FILE_NAME: fileName,
@@ -78,9 +79,12 @@ class FirebaseController {
   }
 
   static Future<List<String>> getimageLabels({@required File photoFile}) async {
-    final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(photoFile);
-    final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
-    final List<ImageLabel> cloudLabels = await cloudLabeler.processImage(visionImage);
+    final FirebaseVisionImage visionImage =
+        FirebaseVisionImage.fromFile(photoFile);
+    final ImageLabeler cloudLabeler =
+        FirebaseVision.instance.cloudImageLabeler();
+    final List<ImageLabel> cloudLabels =
+        await cloudLabeler.processImage(visionImage);
     List<String> labels = <String>[];
     for (ImageLabel label in cloudLabels) {
       if (label.confidence >= Constant.MIN_ML_CONFIDENCE) {
@@ -90,4 +94,13 @@ class FirebaseController {
     return labels;
   }
 
+  static Future<void> updatePhotoFile(
+    String docId,
+    Map<String, dynamic> updateInfo,
+  ) async {
+    await FirebaseFirestore.instance
+        .collection(Constant.PHOTO_MEMO_COLLECTION)
+        .doc(docId)
+        .update(updateInfo);
+  }
 }
