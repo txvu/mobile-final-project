@@ -3,6 +3,8 @@ import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photomemo.dart';
 import 'package:cmsc4303_lesson3/screen/addphotomeno_screen.dart';
 import 'package:cmsc4303_lesson3/screen/detailedview_screen.dart';
+import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
+import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +21,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   _Controller controller;
   User user = FirebaseAuth.instance.currentUser;
   List<PhotoMemo> photoMemoList;
+  GlobalKey<FormState> formKey = GlobalKey();
 
   @override
   void initState() {
@@ -37,7 +40,40 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       onWillPop: () => Future.value(false), // Disable android back button
       child: Scaffold(
         appBar: AppBar(
-          title: Text('User Home'),
+          // title: Text('User Home'),
+
+          actions: [
+            controller.delIndex != null
+                ? IconButton(
+                    icon: Icon(Icons.cancel),
+                    onPressed: controller.cancelDelete,
+                  )
+                : Form(
+                    key: formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: 'Search',
+                            fillColor: Theme.of(context).backgroundColor,
+                            filled: true,
+                          ),
+                          autocorrect: true,
+                          onSaved: controller.saveSearchKeyString,
+                        ),
+                      ),
+                    ),
+                  ),
+            controller.delIndex != null
+                ? IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: controller.delete,
+                  )
+                : IconButton(
+                    icon: Icon(Icons.search), onPressed: controller.search),
+          ],
         ),
         drawer: Drawer(
           child: ListView(
@@ -50,6 +86,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 leading: Icon(Icons.exit_to_app),
                 title: Text('Sign Out'),
                 onTap: controller.signOut,
+              ),
+              ListTile(
+                leading: Icon(Icons.people),
+                title: Text('Shared With Me'),
+                onTap: controller.sharedWithMe,
               ),
             ],
           ),
@@ -65,26 +106,34 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               )
             : ListView.builder(
                 itemCount: photoMemoList.length,
-                itemBuilder: (BuildContext context, int index) => ListTile(
-                  leading: MyImage.network(
-                    url: photoMemoList[index].photoURL,
-                    context: context,
+                itemBuilder: (BuildContext context, int index) => Container(
+                  color: controller.delIndex != null &&
+                          controller.delIndex == index
+                      ? Theme.of(context).highlightColor
+                      : Theme.of(context).scaffoldBackgroundColor,
+                  child: ListTile(
+                    leading: MyImage.network(
+                      url: photoMemoList[index].photoURL,
+                      context: context,
+                    ),
+                    title: Text(photoMemoList[index].title),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          photoMemoList[index].memo.length >= 20
+                              ? photoMemoList[index].memo.substring(0, 20) +
+                                  '...'
+                              : photoMemoList[index].memo,
+                        ),
+                        Text('created By:  ${photoMemoList[index].createdBy}'),
+                        Text('Shared With: ${photoMemoList[index].sharedWith}'),
+                        Text('Updated At: ${photoMemoList[index].timestamp}'),
+                      ],
+                    ),
+                    onTap: () => controller.onTap(index),
+                    onLongPress: () => controller.onLongPress(index),
                   ),
-                  title: Text(photoMemoList[index].title),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        photoMemoList[index].memo.length >= 20
-                            ? photoMemoList[index].memo.substring(0, 20) + '...'
-                            : photoMemoList[index].memo,
-                      ),
-                      Text('created By:  ${photoMemoList[index].createdBy}'),
-                      Text('Shared With: ${photoMemoList[index].sharedWith}'),
-                      Text('Updated At: ${photoMemoList[index].timestamp}'),
-                    ],
-                  ),
-                  onTap: () => controller.onTap(index),
                 ),
               ),
       ),
@@ -94,6 +143,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
 class _Controller {
   _UserHomeScreenState state;
+  int delIndex;
+  String keyString;
 
   _Controller(this.state);
 
@@ -117,6 +168,7 @@ class _Controller {
   }
 
   void onTap(int index) async {
+    if (delIndex != null) return;
     await Navigator.pushNamed(
       state.context,
       DetailedViewScreen.routeName,
@@ -126,5 +178,89 @@ class _Controller {
       },
     );
     state.render(() {});
+  }
+
+  void sharedWithMe() async {
+    try {
+      List<PhotoMemo> photoMemoList =
+          await FirebaseController.getPhotoMemoSharedWithMe(
+              email: state.user.email);
+      await Navigator.pushNamed(
+        state.context,
+        SharedWithScreen.routeName,
+        arguments: {
+          Constant.ARG_USER: state.user,
+          Constant.ARG_PHOTOMEMOLIST: photoMemoList,
+        },
+      );
+      Navigator.of(state.context).pop();
+    } catch (e) {
+      print(e.toString());
+      MyDialog.info(
+        context: state.context,
+        title: 'Get Shared PhotoMemo Error',
+        content: '$e',
+      );
+    }
+  }
+
+  void onLongPress(int index) {
+    if (delIndex != null) return;
+    state.render(() => delIndex = index);
+  }
+
+  void cancelDelete() {
+    state.render(() => delIndex = null);
+  }
+
+  void delete() async {
+    try {
+      PhotoMemo p = state.photoMemoList[delIndex];
+      await FirebaseController.deletePhotoMemo(p);
+      state.render(() {
+        state.photoMemoList.removeAt(delIndex);
+        delIndex = null;
+      });
+    } catch (e) {
+      MyDialog.info(
+        context: state.context,
+        title: 'Failed to delete picture',
+        content: '$e',
+      );
+    }
+  }
+
+  void saveSearchKeyString(String value) {
+    keyString = value;
+  }
+
+  void search() async {
+    state.formKey.currentState.save();
+    var keys = keyString.split(',').toList();
+    List<String> searchKeys = [];
+    for (var k in keys) {
+      if (k.trim().isNotEmpty) searchKeys.add(k.trim().toLowerCase());
+    }
+
+    try {
+      List<PhotoMemo> results;
+      if (searchKeys.isNotEmpty) {
+        results = await FirebaseController.searchImage(
+          createdBy: state.user.email,
+          searchLabels: searchKeys,
+        );
+      } else {
+        results =
+            await FirebaseController.getPhotoMemoList(email: state.user.email);
+      }
+      state.render(() => state.photoMemoList = results);
+    } catch (e) {
+      print(e);
+      MyDialog.info(
+        context: state.context,
+        title: 'Search error',
+        content: '$e',
+      );
+    }
   }
 }

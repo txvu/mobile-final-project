@@ -1,6 +1,7 @@
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/screen/addphotomeno_screen.dart';
 import 'package:cmsc4303_lesson3/screen/detailedview_screen.dart';
+import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
 import 'package:cmsc4303_lesson3/screen/signin_screen.dart';
 import 'package:cmsc4303_lesson3/screen/signup_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
@@ -31,6 +32,7 @@ class Lesson3 extends StatelessWidget {
         UserHomeScreen.routeName: (context) => UserHomeScreen(),
         AddPhotoMemoScreen.routeName: (context) => AddPhotoMemoScreen(),
         DetailedViewScreen.routeName: (context) => DetailedViewScreen(),
+        SharedWithScreen.routeName: (context) => SharedWithScreen(),
       },
     );
   }
