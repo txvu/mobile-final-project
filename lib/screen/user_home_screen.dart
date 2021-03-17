@@ -79,8 +79,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           child: ListView(
             children: [
               UserAccountsDrawerHeader(
+                currentAccountPicture: Icon(Icons.person, size: 100.0),
                 accountName: Text(user.displayName ?? 'N/A'),
                 accountEmail: Text(user.email),
+              ),
+              ListTile(
+                leading: Icon(Icons.people),
+                title: Text('Shared With Me'),
+                onTap: controller.sharedWithMe,
               ),
               ListTile(
                 leading: Icon(Icons.exit_to_app),
@@ -88,9 +94,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 onTap: controller.signOut,
               ),
               ListTile(
-                leading: Icon(Icons.people),
-                title: Text('Shared With Me'),
-                onTap: controller.sharedWithMe,
+                leading: Icon(Icons.settings),
+                title: Text('Settings'),
+                onTap: null,
               ),
             ],
           ),
@@ -116,6 +122,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       url: photoMemoList[index].photoURL,
                       context: context,
                     ),
+                    trailing: Icon(Icons.keyboard_arrow_right),
                     title: Text(photoMemoList[index].title),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
