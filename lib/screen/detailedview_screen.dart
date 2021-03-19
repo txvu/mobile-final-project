@@ -85,8 +85,7 @@ class _DetailedViewState extends State<DetailedViewScreen> {
                             color: Colors.blue,
                             child: PopupMenuButton<String>(
                               onSelected: controller.getPhoto,
-                              itemBuilder: (context) =>
-                                  <PopupMenuEntry<String>>[
+                              itemBuilder: (context) => <PopupMenuEntry<String>>[
                                 PopupMenuItem(
                                   child: Row(
                                     children: [
@@ -208,8 +207,7 @@ class _Controller {
                 state.progressMessage = null;
               else {
                 progress *= 100;
-                state.progressMessage =
-                    'Uploading ' + progress.toStringAsFixed(1) + '%';
+                state.progressMessage = 'Uploading ' + progress.toStringAsFixed(1) + '%';
               }
             });
           },
@@ -218,12 +216,12 @@ class _Controller {
         // image labels by ML
         state.onePhotoMemoTemp.photoURL = photoInfo[Constant.ARG_DOWNLOAD_URL];
         state.render(() => state.progressMessage = 'ML Image Labeler Started!');
-        List<dynamic> imageLabels =
-            await FirebaseController.getImageLabels(photoFile: photoFile);
+        List<dynamic> imageLabels = await FirebaseController.getImageLabels(photoFile: photoFile);
         state.onePhotoMemoTemp.imageLabels = imageLabels;
         state.render(() => state.progressMessage = null);
 
-        updateInfo[PhotoMemo.PHOTO_URL] = updateInfo[Constant.ARG_FILE_NAME];
+        // updateInfo[PhotoMemo.PHOTO_URL] = updateInfo[Constant.ARG_FILE_NAME];
+        updateInfo[PhotoMemo.PHOTO_URL] = photoInfo[Constant.ARG_DOWNLOAD_URL];
         updateInfo[PhotoMemo.IMAGE_LABELS] = imageLabels;
       }
 
@@ -233,14 +231,12 @@ class _Controller {
       if (state.onePhotoMemoOriginal.memo != state.onePhotoMemoTemp.memo)
         updateInfo[PhotoMemo.MEMO] = state.onePhotoMemoTemp.memo;
 
-      if (!listEquals(state.onePhotoMemoOriginal.sharedWith,
-          state.onePhotoMemoTemp.sharedWith))
+      if (!listEquals(state.onePhotoMemoOriginal.sharedWith, state.onePhotoMemoTemp.sharedWith))
         updateInfo[PhotoMemo.SHARED_WITH] = state.onePhotoMemoTemp.sharedWith;
 
       updateInfo[PhotoMemo.TIMESTAMP] = DateTime.now();
 
-      await FirebaseController.updatePhotoFile(
-          state.onePhotoMemoTemp.docId, updateInfo);
+      await FirebaseController.updatePhotoFile(state.onePhotoMemoTemp.docId, updateInfo);
 
       state.onePhotoMemoOriginal.assign(state.onePhotoMemoTemp);
 
@@ -291,8 +287,7 @@ class _Controller {
 
   void saveSharedWith(String value) {
     if (value.trim().length != 0) {
-      state.onePhotoMemoTemp.sharedWith =
-          value.split(RegExp('(,| )+')).map((e) => e.trim()).toList();
+      state.onePhotoMemoTemp.sharedWith = value.split(RegExp('(,| )+')).map((e) => e.trim()).toList();
     }
   }
 }
