@@ -1,12 +1,22 @@
-import 'package:cmsc4303_lesson3/model/constant.dart';
-import 'package:cmsc4303_lesson3/screen/addphotomeno_screen.dart';
-import 'package:cmsc4303_lesson3/screen/detailedview_screen.dart';
-import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
-import 'package:cmsc4303_lesson3/screen/signin_screen.dart';
-import 'package:cmsc4303_lesson3/screen/signup_screen.dart';
-import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
+import './model/constant.dart';
+import './screen/addphotomeno_screen.dart';
+import './screen/detailedview_screen.dart';
+import './screen/shared_with_screen.dart';
+import './screen/signin_screen.dart';
+import './screen/signup_screen.dart';
+import './screen/user_home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+// Trinh test
+// Trinh test
+// Trinh test
+// Trinh test
+// Trinh test
+// Trinh test
+// Trinh test
+// Trinh test
+// Trinh test
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
