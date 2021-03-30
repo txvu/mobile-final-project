@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "167248965293",
+    "project_id": "cmsc4303-trinhv-lesson3",
+    "storage_bucket": "cmsc4303-trinhv-lesson3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167248965293:android:ca4dfc362ac905ac44a024",
+        "android_client_info": {
+          "package_name": "com.example.cmsc4303_lesson3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167248965293-mcrq7qbk289c2la8644360bkna3fi9jr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMctbrYfEg19ZqoSaLt-asEb8UDMkbGYM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167248965293-mcrq7qbk289c2la8644360bkna3fi9jr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "167248965293-o9o4n72ojpavp40ucs73aeb7msi8fa39.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "edu.uco.tvu14.cmsc4303Lesson3"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
