@@ -43,6 +43,13 @@ class PhotoComments {
     );
   }
 
+  static String validateComment(String value) {
+    if (value == null || value.length < 2)
+      return 'too short';
+    else
+      return null;
+  }
+
   PhotoComments.clone(PhotoComments photoComments) {
     this.docId = photoComments.docId;
     this.createdBy = photoComments.createdBy;

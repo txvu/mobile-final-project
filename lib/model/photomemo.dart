@@ -19,15 +19,16 @@ class PhotoMemo {
   static const SHARED_WITH = 'shared_with';
   static const IMAGE_LABELS = 'image_label';
 
-  PhotoMemo({this.docId,
-    this.createdBy,
-    this.memo,
-    this.title,
-    this.photoFileName,
-    this.photoURL,
-    this.timestamp,
-    this.sharedWith,
-    this.imageLabels}) {
+  PhotoMemo(
+      {this.docId,
+      this.createdBy,
+      this.memo,
+      this.title,
+      this.photoFileName,
+      this.photoURL,
+      this.timestamp,
+      this.sharedWith,
+      this.imageLabels}) {
     this.sharedWith ??= [];
     this.imageLabels ??= [];
   }
@@ -56,8 +57,9 @@ class PhotoMemo {
       photoURL: doc[PHOTO_URL],
       sharedWith: doc[SHARED_WITH],
       imageLabels: doc[IMAGE_LABELS],
-      timestamp: doc[TIMESTAMP] == null ? null : DateTime
-          .fromMillisecondsSinceEpoch(doc[TIMESTAMP].millisecondsSinceEpoch),
+      timestamp: doc[TIMESTAMP] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(doc[TIMESTAMP].millisecondsSinceEpoch),
     );
   }
 
@@ -76,12 +78,8 @@ class PhotoMemo {
   }
 
   static String validateSharedWith(String value) {
-    if (value == null || value
-        .trim()
-        .length == 0) return null;
-    List<String> emailList = value.split(RegExp('(,| )+'))
-        .map((e) => e.trim())
-        .toList();
+    if (value == null || value.trim().length == 0) return null;
+    List<String> emailList = value.split(RegExp('(,| )+')).map((e) => e.trim()).toList();
     for (String email in emailList) {
       if (email.contains('@') && email.contains('.'))
         continue;

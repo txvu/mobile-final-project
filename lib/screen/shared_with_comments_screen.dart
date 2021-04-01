@@ -127,7 +127,7 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
                     ElevatedButton(
                       onPressed: () {
                         print(myController.text);
-                        controller.saveComment(myController.text, photoUrl);
+                        controller.saveComment(myController.text.toString(), photoUrl);
                         controller.displayMessage();
                       },
                       child: Text(
@@ -161,15 +161,25 @@ class _Controller {
   List<String> thisPhotoCommentEmail = []; // list of comments
 
   Future<void> saveComment(String value, photoURL) async {
-    photoComments.photoURL = photoURL;
-    photoComments.comments = value;
-    photoComments.timestamp = DateTime.now();
-    photoComments.createdBy = state.user.email;
-    String tempDocId = await FirebaseController.addPhotoComment(photoComments);
-    photoComments.docId = tempDocId;
-    state.render(() {
-      state.myController.text = '';
-    });
+    if (value == null || value.length < 2) {
+      print('value length =' + value.length.toString());
+      MyDialog.info(
+        context: state.context,
+        title: 'Invalid comment',
+        content: 'comment too short',
+      );
+    } else {
+      print("Got here value is good!!!");
+      photoComments.photoURL = photoURL;
+      photoComments.comments = value;
+      photoComments.timestamp = DateTime.now();
+      photoComments.createdBy = state.user.email;
+      String tempDocId = await FirebaseController.addPhotoComment(photoComments);
+      photoComments.docId = tempDocId;
+      state.render(() {
+        state.myController.text = '';
+      });
+    }
   }
 
   Future<List<PhotoComments>> getMessages(String URL) async {
