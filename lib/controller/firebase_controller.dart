@@ -83,6 +83,20 @@ class FirebaseController {
     return result;
   }
 
+  static Future<List<PhotoComments>> getPhotoComments({@required String photoURL}) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection(Constant.PHOTO_COMMENTS)
+        .where(PhotoComments.PHOTO_URL, isEqualTo: photoURL)
+        .orderBy(PhotoComments.TIMESTAMP, descending: true)
+        .get();
+
+    var result = <PhotoComments>[];
+    querySnapshot.docs.forEach((doc) {
+      result.add(PhotoComments.deserialize(doc.data(), doc.id));
+    });
+    return result;
+  }
+
   static Future<List<dynamic>> getImageLabels({@required File photoFile}) async {
     final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(photoFile);
     final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();

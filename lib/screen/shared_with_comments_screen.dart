@@ -45,6 +45,7 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
 
   @override
   Widget build(BuildContext context) {
+    controller.getMessages(photoUrl);
     Map args = ModalRoute.of(context).settings.arguments;
     photoUrl ??= args[Constant.ARG_ONE_PHOTOMEMO];
     return Scaffold(
@@ -72,6 +73,7 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
               onPressed: () {
                 print(myController.text);
                 controller.saveComment(myController.text, photoUrl);
+                controller.displayMessage();
               },
               child: Text('Post Message'),
               style: ElevatedButton.styleFrom(primary: Colors.amber, elevation: 10),
@@ -87,6 +89,8 @@ class _Controller {
   _SharedWithCommentsState state;
   _Controller(this.state);
   PhotoComments photoComments = PhotoComments();
+  List<dynamic> thisPhotoComment; // list of comments
+  List<dynamic> thisPhotoCommentEmail; // list of comments
 
   Future<void> saveComment(String value, photoURL) async {
     photoComments.photoURL = photoURL;
@@ -95,5 +99,26 @@ class _Controller {
     photoComments.createdBy = state.user.email;
     String tempDocId = await FirebaseController.addPhotoComment(photoComments);
     photoComments.docId = tempDocId;
+  }
+
+  Future<void> getMessages(String URL) async {
+    List<PhotoComments> comments =
+        await FirebaseController.getPhotoComments(photoURL: URL);
+    for (int i = 0; i < comments.length; i++) {
+      thisPhotoComment.add(comments[i].comments.toString());
+      thisPhotoCommentEmail.add(comments[i].createdBy.toString());
+    }
+  }
+
+  displayMessage() {
+    if (thisPhotoComment.isNotEmpty && thisPhotoCommentEmail.isNotEmpty) {
+      for (int i = 0; i < thisPhotoComment.length; i++) {
+        //Text(thisPhotoCommentEmail[i] + ": " + thisPhotoComment[i]);
+        print('//////////////////////////////////////////////////////////////');
+        print(thisPhotoCommentEmail[i] + ": " + thisPhotoComment[i]);
+      }
+    } else {
+      return;
+    }
   }
 }
