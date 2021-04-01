@@ -84,7 +84,7 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
                         onPressed: () {
                           controller.gotoComments(photoMemoList[index].photoURL);
                         },
-                        child: Text('Messages'),
+                        child: Text('Comments'),
                         style: ElevatedButton.styleFrom(
                             primary: Colors.amber, elevation: 10),
                       ),

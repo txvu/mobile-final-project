@@ -96,7 +96,7 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
                     controller.saveComment(myController.text, photoUrl);
                     controller.displayMessage();
                   },
-                  child: Text('Post Message'),
+                  child: Text('Post Comment'),
                   style: ElevatedButton.styleFrom(primary: Colors.amber, elevation: 10),
                 ),
               ],
