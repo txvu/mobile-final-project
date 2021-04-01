@@ -84,16 +84,22 @@ class FirebaseController {
   }
 
   static Future<List<PhotoComments>> getPhotoComments({@required String photoURL}) async {
+    print('Fetching comments...');
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection(Constant.PHOTO_COMMENTS)
         .where(PhotoComments.PHOTO_URL, isEqualTo: photoURL)
         .orderBy(PhotoComments.TIMESTAMP, descending: true)
         .get();
 
+    print('Fetched comments...');
     var result = <PhotoComments>[];
     querySnapshot.docs.forEach((doc) {
+      print('adding comment...');
+
       result.add(PhotoComments.deserialize(doc.data(), doc.id));
+      print('aded comment...');
     });
+
     return result;
   }
 

@@ -45,9 +45,12 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
 
   @override
   Widget build(BuildContext context) {
+    print('Start to get commetns');
     controller.getMessages(photoUrl);
+
     Map args = ModalRoute.of(context).settings.arguments;
     photoUrl ??= args[Constant.ARG_ONE_PHOTOMEMO];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Comments'),
@@ -55,28 +58,48 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         key: formKey,
-        child: ListView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * .4,
-              child: MyImage.network(
-                url: photoUrl,
-                context: context,
-              ),
+            Column(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * .4,
+                  child: MyImage.network(
+                    url: photoUrl,
+                    context: context,
+                  ),
+                ),
+                controller.comments.length > 0
+                    ? SingleChildScrollView(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: controller.comments.length,
+                          itemBuilder: (BuildContext context, int index) => ListTile(
+                            title: Text(controller.comments[index].comments),
+                          ),
+                        ),
+                      )
+                    : SizedBox(height: 30),
+              ],
             ),
-            TextFormField(
-              controller: myController,
-              decoration: InputDecoration(
-                  border: UnderlineInputBorder(), labelText: 'Enter a Comment'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                print(myController.text);
-                controller.saveComment(myController.text, photoUrl);
-                controller.displayMessage();
-              },
-              child: Text('Post Message'),
-              style: ElevatedButton.styleFrom(primary: Colors.amber, elevation: 10),
+            Column(
+              children: [
+                TextFormField(
+                  controller: myController,
+                  decoration: InputDecoration(
+                      border: UnderlineInputBorder(), labelText: 'Enter a Comment'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    print(myController.text);
+                    controller.saveComment(myController.text, photoUrl);
+                    controller.displayMessage();
+                  },
+                  child: Text('Post Message'),
+                  style: ElevatedButton.styleFrom(primary: Colors.amber, elevation: 10),
+                ),
+              ],
             ),
           ],
         ),
@@ -89,8 +112,9 @@ class _Controller {
   _SharedWithCommentsState state;
   _Controller(this.state);
   PhotoComments photoComments = PhotoComments();
-  List<dynamic> thisPhotoComment; // list of comments
-  List<dynamic> thisPhotoCommentEmail; // list of comments
+  List<String> thisPhotoComment = []; // list of comments
+  List<String> thisPhotoCommentEmail = []; // list of comments
+  List<PhotoComments> comments = [];
 
   Future<void> saveComment(String value, photoURL) async {
     photoComments.photoURL = photoURL;
@@ -102,12 +126,17 @@ class _Controller {
   }
 
   Future<void> getMessages(String URL) async {
-    List<PhotoComments> comments =
-        await FirebaseController.getPhotoComments(photoURL: URL);
+    print('im here');
+    comments = await FirebaseController.getPhotoComments(photoURL: URL);
+    print('im here2222n----> ${comments.length}');
+
     for (int i = 0; i < comments.length; i++) {
-      thisPhotoComment.add(comments[i].comments.toString());
-      thisPhotoCommentEmail.add(comments[i].createdBy.toString());
+      //thisPhotoComment.add(comments[i].comments);
+      //thisPhotoCommentEmail.add(comments[i].createdBy.toString());
+
+      print(comments[i].comments.toString());
     }
+    print('im here3333');
   }
 
   displayMessage() {
