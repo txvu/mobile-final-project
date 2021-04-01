@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 
+import '../model/photoComment.dart';
 import 'detailedview_screen.dart';
 
 class SharedWithScreen extends StatefulWidget {
@@ -48,49 +49,74 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
               itemBuilder: (context, index) => Card(
                 elevation: 7.0,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.4,
-                        child: MyImage.network(
-                          url: photoMemoList[index].photoURL,
-                          context: context,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          child: MyImage.network(
+                            url: photoMemoList[index].photoURL,
+                            context: context,
+                          ),
                         ),
                       ),
-                    ),
-                    Text(
-                      'Title: ${photoMemoList[index].title}',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Text(
-                      'Memo: ${photoMemoList[index].memo}',
-                      // style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Text(
-                      'Created By: ${photoMemoList[index].createdBy}',
-                      // style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Text(
-                      'Updated At: ${photoMemoList[index].timestamp}',
-                      // style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Text(
-                      'Shared With: ${photoMemoList[index].sharedWith}',
-                      // style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          controller.gotoComments(photoMemoList[index].photoURL);
-                        },
-                        child: Text('Messages'),
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.amber, elevation: 10),
+                      Text(
+                        'Title: ${photoMemoList[index].title}',
+                        style: Theme.of(context).textTheme.headline6,
                       ),
-                    ),
-                  ],
-                ),
+                      Text(
+                        'Memo: ${photoMemoList[index].memo}',
+                        // style: Theme.of(context).textTheme.headline6,
+                      ),
+                      Text(
+                        'Created By: ${photoMemoList[index].createdBy}',
+                        // style: Theme.of(context).textTheme.headline6,
+                      ),
+                      Text(
+                        'Updated At: ${photoMemoList[index].timestamp}',
+                        // style: Theme.of(context).textTheme.headline6,
+                      ),
+                      Text(
+                        'Shared With: ${photoMemoList[index].sharedWith}',
+                        // style: Theme.of(context).textTheme.headline6,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FutureBuilder(
+                            future: controller.getNumberOfComments(
+                                photoMemoList[index].photoURL),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                if (snapshot.data > 0) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.redAccent
+                                    ),
+                                    child: Text(
+                                      ' ${snapshot.data.toString()} ',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.bold),
+                                    ),
+                                  );
+                                } else {
+                                  return SizedBox(height: 1,);
+                                }
+                              } else {
+                                return SizedBox(height: 1,);
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.message),
+                            onPressed: () => controller.gotoComments(
+                              photoMemoList[index].photoURL,
+                            ),
+                          ),
+                        ],
+                      )
+                    ]),
               ),
             ),
     );
@@ -99,6 +125,7 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
 
 class _Controller {
   _SharedWithScreenState state;
+  List<PhotoComments> comments = [];
 
   _Controller(this.state);
 
@@ -114,6 +141,7 @@ class _Controller {
     );
     state.render(() {});
   }
+
   // end creating on tap event similiar to user_home_screen
 
   //test
@@ -133,5 +161,23 @@ class _Controller {
       print('oops');
     }
   }
-  //test
+
+  Future<int> getNumberOfComments(String URL) async {
+    int value = 0;
+    await getMessages(URL);
+    value = comments.length;
+    return value;
+  }
+
+  Future<void> getMessages(String URL) async {
+    print('im here');
+    comments = await FirebaseController.getPhotoComments(photoURL: URL);
+    print('im here2222n----> ${comments.length}');
+
+    for (int i = 0; i < comments.length; i++) {
+      print(comments[i].comments.toString());
+    }
+    print('im here3333');
+  }
+//test
 }
