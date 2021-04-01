@@ -55,53 +55,96 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
       appBar: AppBar(
         title: Text('Comments'),
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        key: formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * .4,
-                  child: MyImage.network(
-                    url: photoUrl,
-                    context: context,
+      body: SingleChildScrollView(
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: MyImage.network(
+                      url: photoUrl,
+                      context: context,
+                    ),
                   ),
+                  // controller.comments.length > 0
+                  //     ? Container(
+                  //         height: MediaQuery.of(context).size.height * 0.4,
+                  //         padding: EdgeInsets.all(8.0),
+                  //         child: ListView.builder(
+                  //           itemCount: controller.comments.length,
+                  //           itemBuilder: (BuildContext context, int index) =>
+                  //               Container(
+                  //             color: Colors.white10,
+                  //             margin: EdgeInsets.only(bottom: 5.0),
+                  //             child: ListTile(
+                  //               title: Text(controller.comments[index].comments),
+                  //               subtitle:
+                  //                   Text(controller.comments[index].createdBy),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       )
+                  //     : Text('No comment'),
+                  FutureBuilder(
+                    future: controller.getMessages(photoUrl),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            padding: EdgeInsets.all(8.0),
+                            child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (BuildContext context, int index) => Container(
+                                color: Colors.white10,
+                                margin: EdgeInsets.only(bottom: 5.0),
+                                child: ListTile(
+                                  title: Text(snapshot.data[index].comments),
+                                  subtitle: Text(snapshot.data[index].createdBy),
+                                  dense: false,
+                                ),
+                              ),
+                            ));
+                      } else {
+                        return Text('No Comment');
+                      }
+                    },
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: myController,
+                      decoration: InputDecoration(
+                          border: UnderlineInputBorder(), labelText: 'Enter a Comment'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        print(myController.text);
+                        controller.saveComment(myController.text, photoUrl);
+                        controller.displayMessage();
+                      },
+                      child: Text(
+                        'Post Message',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      style:
+                          ElevatedButton.styleFrom(primary: Colors.amber, elevation: 10),
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    )
+                  ],
                 ),
-                controller.comments.length > 0
-                    ? SingleChildScrollView(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: controller.comments.length,
-                          itemBuilder: (BuildContext context, int index) => ListTile(
-                            title: Text(controller.comments[index].comments),
-                          ),
-                        ),
-                      )
-                    : SizedBox(height: 30),
-              ],
-            ),
-            Column(
-              children: [
-                TextFormField(
-                  controller: myController,
-                  decoration: InputDecoration(
-                      border: UnderlineInputBorder(), labelText: 'Enter a Comment'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    print(myController.text);
-                    controller.saveComment(myController.text, photoUrl);
-                    controller.displayMessage();
-                  },
-                  child: Text('Post Comment'),
-                  style: ElevatedButton.styleFrom(primary: Colors.amber, elevation: 10),
-                ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -110,11 +153,12 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
 
 class _Controller {
   _SharedWithCommentsState state;
+
   _Controller(this.state);
+
   PhotoComments photoComments = PhotoComments();
   List<String> thisPhotoComment = []; // list of comments
   List<String> thisPhotoCommentEmail = []; // list of comments
-  List<PhotoComments> comments = [];
 
   Future<void> saveComment(String value, photoURL) async {
     photoComments.photoURL = photoURL;
@@ -123,10 +167,13 @@ class _Controller {
     photoComments.createdBy = state.user.email;
     String tempDocId = await FirebaseController.addPhotoComment(photoComments);
     photoComments.docId = tempDocId;
+    state.render(() {
+      state.myController.text = '';
+    });
   }
 
-  Future<void> getMessages(String URL) async {
-    print('im here');
+  Future<List<PhotoComments>> getMessages(String URL) async {
+    List<PhotoComments> comments = [];
     comments = await FirebaseController.getPhotoComments(photoURL: URL);
     print('im here2222n----> ${comments.length}');
 
@@ -136,7 +183,7 @@ class _Controller {
 
       print(comments[i].comments.toString());
     }
-    print('im here3333');
+    return comments;
   }
 
   displayMessage() {
