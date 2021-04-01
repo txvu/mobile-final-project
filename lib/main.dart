@@ -1,3 +1,5 @@
+import 'package:cmsc4303_lesson3/screen/shared_with_comments_screen.dart';
+
 import './model/constant.dart';
 import './screen/addphotomeno_screen.dart';
 import './screen/detailedview_screen.dart';
@@ -37,6 +39,7 @@ class Lesson3 extends StatelessWidget {
         AddPhotoMemoScreen.routeName: (context) => AddPhotoMemoScreen(),
         DetailedViewScreen.routeName: (context) => DetailedViewScreen(),
         SharedWithScreen.routeName: (context) => SharedWithScreen(),
+        SharedWithComments.routeName: (context) => SharedWithComments(),
       },
     );
   }

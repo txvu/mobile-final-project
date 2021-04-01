@@ -1,8 +1,12 @@
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photomemo.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_image.dart';
+import 'package:cmsc4303_lesson3/screen/shared_with_comments_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
+
+import 'detailedview_screen.dart';
 
 class SharedWithScreen extends StatefulWidget {
   static const routeName = '/shared_with_screen';
@@ -75,6 +79,16 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
                       'Shared With: ${photoMemoList[index].sharedWith}',
                       // style: Theme.of(context).textTheme.headline6,
                     ),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          controller.gotoComments(photoMemoList[index].photoURL);
+                        },
+                        child: Text('Messages'),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.amber, elevation: 10),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -87,4 +101,37 @@ class _Controller {
   _SharedWithScreenState state;
 
   _Controller(this.state);
+
+  // creating on tap event similiar to user_home_screen
+  void onTap(int index) async {
+    await Navigator.pushNamed(
+      state.context,
+      DetailedViewScreen.routeName,
+      arguments: {
+        Constant.ARG_USER: state.user,
+        Constant.ARG_ONE_PHOTOMEMO: state.photoMemoList[index]
+      },
+    );
+    state.render(() {});
+  }
+  // end creating on tap event similiar to user_home_screen
+
+  //test
+  void gotoComments(photoUrl) async {
+    try {
+      //String url = photo_url;
+      await Navigator.pushNamed(
+        state.context,
+        SharedWithComments.routeName,
+        arguments: {
+          Constant.ARG_USER: state.user,
+          Constant.ARG_ONE_PHOTOMEMO: photoUrl,
+        },
+      );
+      Navigator.of(state.context).pop();
+    } catch (e) {
+      print('oops');
+    }
+  }
+  //test
 }
