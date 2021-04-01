@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
+import 'package:cmsc4303_lesson3/model/photoComment.dart';
 import 'package:cmsc4303_lesson3/model/photomemo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -9,10 +10,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class FirebaseController {
-  static Future<User> signIn(
-      {@required String email, @required String password}) async {
+  static Future<User> signIn({@required String email, @required String password}) async {
     UserCredential userCredential =
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -23,7 +23,7 @@ class FirebaseController {
   static Future<void> createNewAccount(
       {@required String email, @required String password}) async {
     UserCredential userCredential =
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -48,8 +48,7 @@ class FirebaseController {
       // listener(progress);
     });
     await task;
-    String downloadURL =
-    await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+    String downloadURL = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
     return <String, String>{
       Constant.ARG_DOWNLOAD_URL: downloadURL,
       Constant.ARG_FILE_NAME: fileName,
@@ -63,8 +62,14 @@ class FirebaseController {
     return ref.id;
   }
 
-  static Future<List<PhotoMemo>> getPhotoMemoList(
-      {@required String email}) async {
+  static Future<String> addPhotoComment(PhotoComments photoComments) async {
+    var ref = await FirebaseFirestore.instance
+        .collection(Constant.PHOTO_COMMENTS)
+        .add(photoComments.serialize());
+    return ref.id;
+  }
+
+  static Future<List<PhotoMemo>> getPhotoMemoList({@required String email}) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection(Constant.PHOTO_MEMO_COLLECTION)
         .where(PhotoMemo.CREATED_BY, isEqualTo: email)
@@ -78,14 +83,10 @@ class FirebaseController {
     return result;
   }
 
-  static Future<List<dynamic>> getImageLabels(
-      {@required File photoFile}) async {
-    final FirebaseVisionImage visionImage =
-    FirebaseVisionImage.fromFile(photoFile);
-    final ImageLabeler cloudLabeler =
-    FirebaseVision.instance.cloudImageLabeler();
-    final List<ImageLabel> cloudLabels =
-    await cloudLabeler.processImage(visionImage);
+  static Future<List<dynamic>> getImageLabels({@required File photoFile}) async {
+    final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(photoFile);
+    final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
+    final List<ImageLabel> cloudLabels = await cloudLabeler.processImage(visionImage);
     List<dynamic> labels = <dynamic>[];
     for (ImageLabel label in cloudLabels) {
       if (label.confidence >= Constant.MIN_ML_CONFIDENCE) {
@@ -95,8 +96,10 @@ class FirebaseController {
     return labels;
   }
 
-  static Future<void> updatePhotoFile(String docId,
-      Map<String, dynamic> updateInfo,) async {
+  static Future<void> updatePhotoFile(
+    String docId,
+    Map<String, dynamic> updateInfo,
+  ) async {
     await FirebaseFirestore.instance
         .collection(Constant.PHOTO_MEMO_COLLECTION)
         .doc(docId)
@@ -125,10 +128,7 @@ class FirebaseController {
         .doc(photoMemo.docId)
         .delete();
 
-    await FirebaseStorage.instance
-        .ref()
-        .child(photoMemo.photoFileName)
-        .delete();
+    await FirebaseStorage.instance.ref().child(photoMemo.photoFileName).delete();
   }
 
   static Future<List<PhotoMemo>> searchImage(
@@ -141,8 +141,8 @@ class FirebaseController {
         .get();
 
     var result = <PhotoMemo>[];
-    querySnapshot.docs.forEach((doc) =>
-        result.add(PhotoMemo.deserialize(doc.data(), doc.id)));
+    querySnapshot.docs
+        .forEach((doc) => result.add(PhotoMemo.deserialize(doc.data(), doc.id)));
 
     return result;
   }

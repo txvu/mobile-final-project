@@ -3,7 +3,7 @@ class PhotoComments {
   String createdBy;
   String photoURL;
   DateTime timestamp;
-  List<dynamic> comments; // list of comments
+  String comments; // list of comments
 
   // Key for Firestore doc
   static const CREATED_BY = 'created_by';
@@ -18,7 +18,7 @@ class PhotoComments {
     this.timestamp,
     this.comments,
   }) {
-    this.comments ??= [];
+    //this.comments ??= [];
   }
 
   // From dart object to FireStore document
@@ -43,23 +43,20 @@ class PhotoComments {
     );
   }
 
-  PhotoComments.clone(PhotoComments photoMemo) {
-    this.docId = photoMemo.docId;
-    this.createdBy = photoMemo.createdBy;
-    this.photoURL = photoMemo.photoURL;
-    this.timestamp = photoMemo.timestamp;
+  PhotoComments.clone(PhotoComments photoComments) {
+    this.docId = photoComments.docId;
+    this.createdBy = photoComments.createdBy;
+    this.photoURL = photoComments.photoURL;
+    this.timestamp = photoComments.timestamp;
 
-    this.comments = [];
-    this.comments.addAll(photoMemo.comments);
+    this.comments = photoComments.comments;
   }
 
-  void assign(PhotoComments photoMemo) {
-    this.docId = photoMemo.docId;
-    this.createdBy = photoMemo.createdBy;
-    this.photoURL = photoMemo.photoURL;
-    this.timestamp = photoMemo.timestamp;
-
-    this.comments.clear();
-    this.comments.addAll(photoMemo.comments);
+  void assign(PhotoComments photoComments) {
+    this.docId = photoComments.docId;
+    this.createdBy = photoComments.createdBy;
+    this.photoURL = photoComments.photoURL;
+    this.timestamp = photoComments.timestamp;
+    this.comments = photoComments.comments;
   }
 }

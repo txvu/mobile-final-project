@@ -26,6 +26,7 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
   GlobalKey<FormState> formKey = GlobalKey();
   PhotoMemo onePhotoMemoTemp;
   String photoUrl;
+  User user = FirebaseAuth.instance.currentUser;
   final myController = TextEditingController();
 
   @override
@@ -70,6 +71,7 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
             ElevatedButton(
               onPressed: () {
                 print(myController.text);
+                controller.saveComment(myController.text, photoUrl);
               },
               child: Text('Post Message'),
               style: ElevatedButton.styleFrom(primary: Colors.amber, elevation: 10),
@@ -86,7 +88,12 @@ class _Controller {
   _Controller(this.state);
   PhotoComments photoComments = PhotoComments();
 
-  void saveComment(String value) {
-    photoComments.comments.add(value);
+  Future<void> saveComment(String value, photoURL) async {
+    photoComments.photoURL = photoURL;
+    photoComments.comments = value;
+    photoComments.timestamp = DateTime.now();
+    photoComments.createdBy = state.user.email;
+    String tempDocId = await FirebaseController.addPhotoComment(photoComments);
+    photoComments.docId = tempDocId;
   }
 }
