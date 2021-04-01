@@ -102,10 +102,10 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
                               color: Colors.white10,
                               margin: EdgeInsets.only(bottom: 5.0),
                               child: ListTile(
-                                title:
-                                    Text(snapshot.data[index].comments),
-                                subtitle:
-                                    Text(snapshot.data[index].createdBy),
+                                title: Text(snapshot.data[index].comments),
+                                subtitle: Text(snapshot.data[index].createdBy),
+                                dense: false,
+
                               ),
                             ),
                           ));
@@ -161,7 +161,6 @@ class _Controller {
   List<String> thisPhotoComment = []; // list of comments
   List<String> thisPhotoCommentEmail = []; // list of comments
 
-
   Future<void> saveComment(String value, photoURL) async {
     photoComments.photoURL = photoURL;
     photoComments.comments = value;
@@ -169,6 +168,9 @@ class _Controller {
     photoComments.createdBy = state.user.email;
     String tempDocId = await FirebaseController.addPhotoComment(photoComments);
     photoComments.docId = tempDocId;
+    state.render(() {
+      state.myController.text = '';
+    });
   }
 
   Future<List<PhotoComments>> getMessages(String URL) async {

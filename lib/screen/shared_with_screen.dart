@@ -92,12 +92,12 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
                                   return Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(5),
-                                        color: Colors.redAccent
+                                        color: Colors.red,
                                     ),
                                     child: Text(
                                       ' ${snapshot.data.toString()} ',
                                       style: TextStyle(
-                                          color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.bold),
+                                          color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.bold),
                                     ),
                                   );
                                 } else {
