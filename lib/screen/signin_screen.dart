@@ -133,14 +133,14 @@ class _Controller {
 
     User user;
 
-    MyDialog.circularProgressStart(state.context);
+    // MyDialog.circularProgressStart(state.context);
 
     try {
       user = await FirebaseController.signIn(email: email, password: password);
       print('user::: ${user.email} ::: ${user.metadata}');
     } catch (e) {
       print(e);
-      MyDialog.circularProgressStop(state.context);
+      // MyDialog.circularProgressStop(state.context);
       MyDialog.info(
         context: state.context,
         title: 'Sign In Error',
@@ -149,24 +149,24 @@ class _Controller {
       return;
     }
 
-    try {
-      List<PhotoMemo> photomemoList =
-          await FirebaseController.getPhotoMemoList(email: user.email);
-      MyDialog.circularProgressStop(state.context);
-      Navigator.pushNamed(state.context, UserHomeScreen.routeName, arguments: {
-        Constant.ARG_USER: user,
-        Constant.ARG_PHOTOMEMOLIST: photomemoList,
-      });
-      print(photomemoList.length);
-    } catch (e) {
-      MyDialog.circularProgressStop(state.context);
-      MyDialog.info(
-        context: state.context,
-        title: 'Firestore getPhotomemolist Error',
-        content: e.toString(),
-      );
-      print(e);
-    }
+    // try {
+    //   List<PhotoMemo> photomemoList =
+    //       await FirebaseController.getPhotoMemoList(email: user.email);
+    //   MyDialog.circularProgressStop(state.context);
+    //   Navigator.pushNamed(state.context, UserHomeScreen.routeName, arguments: {
+    //     Constant.ARG_USER: user,
+    //     Constant.ARG_PHOTOMEMOLIST: photomemoList,
+    //   });
+    //   print(photomemoList.length);
+    // } catch (e) {
+    //   MyDialog.circularProgressStop(state.context);
+    //   MyDialog.info(
+    //     context: state.context,
+    //     title: 'Firestore getPhotomemolist Error',
+    //     content: e.toString(),
+    //   );
+    //   print(e);
+    // }
   }
 
   void signUp() {
