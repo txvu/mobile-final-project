@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
-import 'package:cmsc4303_lesson3/model/photomemo.dart';
+import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DetailedViewScreen extends StatefulWidget {

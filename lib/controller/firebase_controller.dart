@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
-import 'package:cmsc4303_lesson3/model/photoComment.dart';
-import 'package:cmsc4303_lesson3/model/photomemo.dart';
+import 'package:cmsc4303_lesson3/model/photo_comment.dart';
+import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -62,7 +62,7 @@ class FirebaseController {
     return ref.id;
   }
 
-  static Future<String> addPhotoComment(PhotoComments photoComments) async {
+  static Future<String> addPhotoComment(PhotoComment photoComments) async {
     var ref = await FirebaseFirestore.instance
         .collection(Constant.PHOTO_COMMENTS)
         .add(photoComments.serialize());
@@ -83,20 +83,20 @@ class FirebaseController {
     return result;
   }
 
-  static Future<List<PhotoComments>> getPhotoComments({@required String photoURL}) async {
+  static Future<List<PhotoComment>> getPhotoComments({@required String photoURL}) async {
     print('Fetching comments...');
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection(Constant.PHOTO_COMMENTS)
-        .where(PhotoComments.PHOTO_URL, isEqualTo: photoURL)
-        .orderBy(PhotoComments.TIMESTAMP, descending: true)
+        .where(PhotoComment.PHOTO_URL, isEqualTo: photoURL)
+        .orderBy(PhotoComment.TIMESTAMP, descending: true)
         .get();
 
     print('Fetched comments...');
-    var result = <PhotoComments>[];
+    var result = <PhotoComment>[];
     querySnapshot.docs.forEach((doc) {
       print('adding comment...');
 
-      result.add(PhotoComments.deserialize(doc.data(), doc.id));
+      result.add(PhotoComment.deserialize(doc.data(), doc.id));
       print('aded comment...');
     });
 

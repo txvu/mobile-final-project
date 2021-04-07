@@ -1,4 +1,4 @@
-class PhotoComments {
+class PhotoComment {
   String docId;
   String createdBy;
   String photoURL;
@@ -11,7 +11,7 @@ class PhotoComments {
   static const TIMESTAMP = 'timestamp';
   static const COMMENTS = 'comments';
 
-  PhotoComments({
+  PhotoComment({
     this.docId,
     this.createdBy,
     this.photoURL,
@@ -31,8 +31,8 @@ class PhotoComments {
     };
   }
 
-  static PhotoComments deserialize(Map<String, dynamic> doc, String docId) {
-    return PhotoComments(
+  static PhotoComment deserialize(Map<String, dynamic> doc, String docId) {
+    return PhotoComment(
       docId: docId,
       createdBy: doc[CREATED_BY],
       photoURL: doc[PHOTO_URL],
@@ -50,20 +50,20 @@ class PhotoComments {
       return null;
   }
 
-  PhotoComments.clone(PhotoComments photoComments) {
-    this.docId = photoComments.docId;
-    this.createdBy = photoComments.createdBy;
-    this.photoURL = photoComments.photoURL;
-    this.timestamp = photoComments.timestamp;
+  PhotoComment.clone(PhotoComment photoComment) {
+    this.docId = photoComment.docId;
+    this.createdBy = photoComment.createdBy;
+    this.photoURL = photoComment.photoURL;
+    this.timestamp = photoComment.timestamp;
 
-    this.comments = photoComments.comments;
+    this.comments = photoComment.comments;
   }
 
-  void assign(PhotoComments photoComments) {
-    this.docId = photoComments.docId;
-    this.createdBy = photoComments.createdBy;
-    this.photoURL = photoComments.photoURL;
-    this.timestamp = photoComments.timestamp;
-    this.comments = photoComments.comments;
+  void assign(PhotoComment photoComment) {
+    this.docId = photoComment.docId;
+    this.createdBy = photoComment.createdBy;
+    this.photoURL = photoComment.photoURL;
+    this.timestamp = photoComment.timestamp;
+    this.comments = photoComment.comments;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
-import 'package:cmsc4303_lesson3/model/photomemo.dart';
+import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
 import 'package:cmsc4303_lesson3/screen/signup_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';

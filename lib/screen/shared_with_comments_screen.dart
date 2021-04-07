@@ -7,10 +7,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
-import 'package:cmsc4303_lesson3/model/photomemo.dart';
+import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
-import 'package:cmsc4303_lesson3/model/photoComment.dart';
+import 'package:cmsc4303_lesson3/model/photo_comment.dart';
 
 class SharedWithComments extends StatefulWidget {
   static const routeName = '/sharedWithCommentsScreen';
@@ -156,7 +156,7 @@ class _Controller {
 
   _Controller(this.state);
 
-  PhotoComments photoComments = PhotoComments();
+  PhotoComment photoComments = PhotoComment();
   List<String> thisPhotoComment = []; // list of comments
   List<String> thisPhotoCommentEmail = []; // list of comments
 
@@ -182,8 +182,8 @@ class _Controller {
     }
   }
 
-  Future<List<PhotoComments>> getMessages(String URL) async {
-    List<PhotoComments> comments = [];
+  Future<List<PhotoComment>> getMessages(String URL) async {
+    List<PhotoComment> comments = [];
     comments = await FirebaseController.getPhotoComments(photoURL: URL);
     print('im here2222n----> ${comments.length}');
 

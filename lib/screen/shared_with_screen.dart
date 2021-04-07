@@ -1,12 +1,12 @@
 import 'package:cmsc4303_lesson3/model/constant.dart';
-import 'package:cmsc4303_lesson3/model/photomemo.dart';
+import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_image.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_comments_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 
-import '../model/photoComment.dart';
+import '../model/photo_comment.dart';
 import 'detailedview_screen.dart';
 
 class SharedWithScreen extends StatefulWidget {
@@ -129,7 +129,7 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
 
 class _Controller {
   _SharedWithScreenState state;
-  List<PhotoComments> comments = [];
+  List<PhotoComment> comments = [];
 
   _Controller(this.state);
 

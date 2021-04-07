@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
-import 'package:cmsc4303_lesson3/model/photomemo.dart';
+import 'package:cmsc4303_lesson3/model/photo_comment.dart';
+import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
 import 'package:cmsc4303_lesson3/screen/signup_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
@@ -218,12 +219,36 @@ class _FeedScreenState extends State<FeedScreen> {
                                 const EdgeInsets.only(right: 8.0, left: 8.0),
                             child: Row(
                               children: [
-                                Text(
-                                  '2',
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                StreamBuilder(
+                                    stream: FirebaseFirestore.instance
+                                        .collection(Constant.PHOTO_COMMENTS)
+                                        .where(PhotoComment.PHOTO_URL,
+                                            isEqualTo: publishedPhotos[index]
+                                                .data()[PhotoMemo.PHOTO_URL])
+                                        .orderBy(PhotoComment.TIMESTAMP,
+                                            descending: true)
+                                        .snapshots(),
+                                    builder: (ctx, commentsSnapshot) {
+                                      if (commentsSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Container();
+                                      }
+                                      if (commentsSnapshot.hasData) {
+                                        final comments =
+                                            commentsSnapshot.data.docs;
+
+                                        return Text(
+                                          comments.length.toString(),
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold),
+                                        );
+                                      }
+                                      print(publishedPhotosSnapshot.error
+                                          .toString());
+                                      return Text(publishedPhotosSnapshot.error
+                                          .toString());
+                                    }),
                                 IconButton(
                                   icon: Icon(
                                     Icons.insert_comment_outlined,
@@ -240,7 +265,14 @@ class _FeedScreenState extends State<FeedScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  publishedPhotos[index].data()[PhotoMemo.SHARED_WITH].toString().split(RegExp('(,| )+')).map((e) => e.trim()).toList().length.toString(),
+                                  publishedPhotos[index]
+                                      .data()[PhotoMemo.SHARED_WITH]
+                                      .toString()
+                                      .split(RegExp('(,| )+'))
+                                      .map((e) => e.trim())
+                                      .toList()
+                                      .length
+                                      .toString(),
                                   style: TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.bold),
