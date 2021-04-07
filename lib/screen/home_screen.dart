@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _selectedIndex = index;
         });
+        Navigator.of(context).pushNamed(HomeScreen.routeName);
         break;
       case 1:
         setState(() {
@@ -70,10 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.of(context).pushNamed(SharedWithScreen.routeName);
         break;
     }
-    setState(() {
-      print('you chose $index');
-      _selectedIndex = index;
-    });
   }
 
   @override

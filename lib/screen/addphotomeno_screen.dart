@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
+import 'package:cmsc4303_lesson3/screen/home_screen.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
+import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
+import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,6 +25,36 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
   GlobalKey<FormState> formKey = GlobalKey();
   File photo;
   String progressMessage;
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        setState(() {
+          _selectedIndex = index;
+        });
+        Navigator.of(context).pushNamed(HomeScreen.routeName);
+        break;
+      case 1:
+        setState(() {
+          _selectedIndex = index;
+        });
+        Navigator.of(context).pushNamed(AddPhotoMemoScreen.routeName);
+        break;
+      case 2:
+        setState(() {
+          _selectedIndex = index;
+        });
+        Navigator.of(context).pushNamed(UserHomeScreen.routeName);
+        break;
+      case 3:
+        setState(() {
+          _selectedIndex = index;
+        });
+        Navigator.of(context).pushNamed(SharedWithScreen.routeName);
+        break;
+    }
+  }
 
   @override
   void initState() {
@@ -42,6 +75,29 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
         actions: [
           IconButton(icon: Icon(Icons.check), onPressed: controller.save),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_a_photo_outlined),
+            label: 'Add',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'My Photo',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_add_outlined),
+            label: 'Share With Me',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.white,
+        onTap: _onItemTapped,
       ),
       body: Form(
         key: formKey,

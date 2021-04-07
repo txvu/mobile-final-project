@@ -3,6 +3,7 @@ import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:cmsc4303_lesson3/screen/addphotomeno_screen.dart';
 import 'package:cmsc4303_lesson3/screen/detailedview_screen.dart';
+import 'package:cmsc4303_lesson3/screen/home_screen.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,6 +38,37 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     // user ??= agrs[Constant.ARG_USER];
     // photoMemoList ??= args[Constant.ARG_PHOTOMEMOLIST];
     photoMemoList = [];
+    int _selectedIndex = 2;
+
+    void _onItemTapped(int index) {
+      switch (index) {
+        case 0:
+          setState(() {
+            _selectedIndex = index;
+          });
+          Navigator.of(context).pushNamed(HomeScreen.routeName);
+          break;
+        case 1:
+          setState(() {
+            _selectedIndex = index;
+          });
+          Navigator.of(context).pushNamed(AddPhotoMemoScreen.routeName);
+          break;
+        case 2:
+          setState(() {
+            _selectedIndex = index;
+          });
+          Navigator.of(context).pushNamed(UserHomeScreen.routeName);
+          break;
+        case 3:
+          setState(() {
+            _selectedIndex = index;
+          });
+          Navigator.of(context).pushNamed(SharedWithScreen.routeName);
+          break;
+      }
+    }
+
     return WillPopScope(
       onWillPop: () => Future.value(false), // Disable android back button
       child: Scaffold(
@@ -75,6 +107,29 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 : IconButton(
                     icon: Icon(Icons.search), onPressed: controller.search),
           ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_a_photo_outlined),
+              label: 'Add',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              label: 'My Photo',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_add_outlined),
+              label: 'Share With Me',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          onTap: _onItemTapped,
         ),
         drawer: Drawer(
           child: ListView(
