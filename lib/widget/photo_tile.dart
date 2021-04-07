@@ -89,7 +89,7 @@ class _PhotoTileState extends State<PhotoTile> {
           Padding(
             padding: const EdgeInsets.only(top: 3.0, right: 10.0, left: 10.0),
             child: Text(
-              _photoMemo.memo.substring(0, 50) + '...',
+              _photoMemo.memo.length >= 50 ? _photoMemo.memo.substring(0, 50) + '...' : _photoMemo.memo,
               style: TextStyle(color: Colors.grey),
             ),
           ),

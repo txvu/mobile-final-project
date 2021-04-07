@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
@@ -6,6 +7,7 @@ import 'package:cmsc4303_lesson3/screen/detailedview_screen.dart';
 import 'package:cmsc4303_lesson3/screen/home_screen.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
+import 'package:cmsc4303_lesson3/widget/photo_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -72,6 +74,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     return WillPopScope(
       onWillPop: () => Future.value(false), // Disable android back button
       child: Scaffold(
+        backgroundColor: Colors.black,
         appBar: AppBar(
           // title: Text('User Home'),
 
@@ -84,14 +87,25 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 : Form(
                     key: formKey,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
+                      padding: const EdgeInsets.only(top: 4.0, bottom: 10.0),
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: TextFormField(
                           decoration: InputDecoration(
-                            hintText: 'Search',
-                            fillColor: Theme.of(context).backgroundColor,
+                            labelText: 'Search',
+                            fillColor: Colors.black54,
                             filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1.0),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                controller.search();
+                              },
+                            ),
                           ),
                           autocorrect: true,
                           onSaved: controller.saveSearchKeyString,
@@ -104,8 +118,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     icon: Icon(Icons.delete),
                     onPressed: controller.delete,
                   )
-                : IconButton(
-                    icon: Icon(Icons.search), onPressed: controller.search),
+                : SizedBox(
+                    height: 1,
+                    width: 45.0,
+                  ),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -157,48 +173,84 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: controller.addButton,
-        ),
-        body: photoMemoList.length == 0
-            ? Text(
-                'No PhotoMemo Found!',
-                style: Theme.of(context).textTheme.headline5,
-              )
-            : ListView.builder(
-                itemCount: photoMemoList.length,
-                itemBuilder: (BuildContext context, int index) => Container(
-                  color: controller.delIndex != null &&
-                          controller.delIndex == index
-                      ? Theme.of(context).highlightColor
-                      : Theme.of(context).scaffoldBackgroundColor,
-                  child: ListTile(
-                    leading: MyImage.network(
-                      url: photoMemoList[index].photoURL,
-                      context: context,
+        // floatingActionButton: FloatingActionButton(
+        //   child: Icon(Icons.add),
+        //   onPressed: controller.addButton,
+        // ),
+        // body: photoMemoList.length == 0
+        //     ? Text(
+        //         'No PhotoMemo Found!',
+        //         style: Theme.of(context).textTheme.headline5,
+        //       )
+        //     : ListView.builder(
+        //         itemCount: photoMemoList.length,
+        //         itemBuilder: (BuildContext context, int index) => Container(
+        //           color: controller.delIndex != null &&
+        //                   controller.delIndex == index
+        //               ? Theme.of(context).highlightColor
+        //               : Theme.of(context).scaffoldBackgroundColor,
+        //           child: ListTile(
+        //             leading: MyImage.network(
+        //               url: photoMemoList[index].photoURL,
+        //               context: context,
+        //             ),
+        //             trailing: Icon(Icons.keyboard_arrow_right),
+        //             title: Text(photoMemoList[index].title),
+        //             subtitle: Column(
+        //               crossAxisAlignment: CrossAxisAlignment.start,
+        //               children: [
+        //                 Text(
+        //                   photoMemoList[index].memo.length >= 20
+        //                       ? photoMemoList[index].memo.substring(0, 20) +
+        //                           '...'
+        //                       : photoMemoList[index].memo,
+        //                 ),
+        //                 Text('created By:  ${photoMemoList[index].createdBy}'),
+        //                 Text('Shared With: ${photoMemoList[index].sharedWith}'),
+        //                 Text('Updated At: ${photoMemoList[index].timestamp}'),
+        //               ],
+        //             ),
+        //             onTap: () => controller.onTap(index),
+        //             onLongPress: () => controller.onLongPress(index),
+        //           ),
+        //         ),
+        //       ),
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection(Constant.PHOTO_MEMO_COLLECTION)
+              .where(PhotoMemo.CREATED_BY, isEqualTo: user.email)
+              .orderBy(PhotoMemo.TIMESTAMP, descending: true)
+              .snapshots(),
+          builder: (ctx, publishedPhotosSnapshot) {
+            if (publishedPhotosSnapshot.connectionState ==
+                ConnectionState.waiting) {
+              return Container();
+            }
+            if (publishedPhotosSnapshot.hasData) {
+              final publishedPhotos = publishedPhotosSnapshot.data.docs;
+              if (publishedPhotos.length == 0) {
+                return Center(
+                  child: Text(
+                    'Empty',
+                    style: TextStyle(
+                      fontSize: 70,
+                      color: Colors.white24,
+                      fontWeight: FontWeight.bold,
                     ),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                    title: Text(photoMemoList[index].title),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          photoMemoList[index].memo.length >= 20
-                              ? photoMemoList[index].memo.substring(0, 20) +
-                                  '...'
-                              : photoMemoList[index].memo,
-                        ),
-                        Text('created By:  ${photoMemoList[index].createdBy}'),
-                        Text('Shared With: ${photoMemoList[index].sharedWith}'),
-                        Text('Updated At: ${photoMemoList[index].timestamp}'),
-                      ],
-                    ),
-                    onTap: () => controller.onTap(index),
-                    onLongPress: () => controller.onLongPress(index),
                   ),
-                ),
-              ),
+                );
+              } else
+                return ListView.builder(
+                    itemCount: publishedPhotos.length,
+                    // reverse: true,
+                    itemBuilder: (ctx, index) => PhotoTile(
+                        PhotoMemo.deserialize(publishedPhotos[index].data(),
+                            publishedPhotos[index].id)));
+            }
+            print(publishedPhotosSnapshot.error.toString());
+            return Text(publishedPhotosSnapshot.error.toString());
+          },
+        ),
       ),
     );
   }

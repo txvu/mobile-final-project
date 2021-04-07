@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:cmsc4303_lesson3/screen/addphotomeno_screen.dart';
@@ -5,6 +6,7 @@ import 'package:cmsc4303_lesson3/screen/home_screen.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_image.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_comments_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
+import 'package:cmsc4303_lesson3/widget/photo_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
@@ -70,6 +72,7 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Shared With Me'),
       ),
@@ -96,90 +99,126 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
         selectedItemColor: Colors.white,
         onTap: _onItemTapped,
       ),
-      body: photoMemoList.length == 0
-          ? Text(
-              'No PhotoMemos shared with me.',
-              style: Theme.of(context).textTheme.headline5,
-            )
-          : ListView.builder(
-              itemCount: photoMemoList.length,
-              itemBuilder: (context, index) => Card(
-                elevation: 7.0,
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Center(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      child: MyImage.network(
-                        url: photoMemoList[index].photoURL,
-                        context: context,
-                      ),
-                    ),
+      // body: photoMemoList.length == 0
+      //     ? Text(
+      //         'No PhotoMemos shared with me.',
+      //         style: Theme.of(context).textTheme.headline5,
+      //       )
+      //     : ListView.builder(
+      //         itemCount: photoMemoList.length,
+      //         itemBuilder: (context, index) => Card(
+      //           elevation: 7.0,
+      //           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      //             Center(
+      //               child: Container(
+      //                 height: MediaQuery.of(context).size.height * 0.4,
+      //                 child: MyImage.network(
+      //                   url: photoMemoList[index].photoURL,
+      //                   context: context,
+      //                 ),
+      //               ),
+      //             ),
+      //             Text(
+      //               'Title: ${photoMemoList[index].title}',
+      //               style: Theme.of(context).textTheme.headline6,
+      //             ),
+      //             Text(
+      //               'Memo: ${photoMemoList[index].memo}',
+      //               // style: Theme.of(context).textTheme.headline6,
+      //             ),
+      //             Text(
+      //               'Created By: ${photoMemoList[index].createdBy}',
+      //               // style: Theme.of(context).textTheme.headline6,
+      //             ),
+      //             Text(
+      //               'Updated At: ${photoMemoList[index].timestamp}',
+      //               // style: Theme.of(context).textTheme.headline6,
+      //             ),
+      //             Text(
+      //               'Shared With: ${photoMemoList[index].sharedWith}',
+      //               // style: Theme.of(context).textTheme.headline6,
+      //             ),
+      //             Row(
+      //               mainAxisAlignment: MainAxisAlignment.end,
+      //               children: [
+      //                 FutureBuilder(
+      //                   future:
+      //                       controller.getNumberOfComments(photoMemoList[index].photoURL),
+      //                   builder: (context, snapshot) {
+      //                     if (snapshot.hasData) {
+      //                       if (snapshot.data > 0) {
+      //                         return Container(
+      //                           decoration: BoxDecoration(
+      //                             borderRadius: BorderRadius.circular(5),
+      //                             color: Colors.red,
+      //                           ),
+      //                           child: Text(
+      //                             ' ${snapshot.data.toString()} ',
+      //                             style: TextStyle(
+      //                                 color: Colors.white,
+      //                                 fontSize: 14.0,
+      //                                 fontWeight: FontWeight.bold),
+      //                           ),
+      //                         );
+      //                       } else {
+      //                         return SizedBox(
+      //                           height: 1,
+      //                         );
+      //                       }
+      //                     } else {
+      //                       return SizedBox(
+      //                         height: 1,
+      //                       );
+      //                     }
+      //                   },
+      //                 ),
+      //                 IconButton(
+      //                   icon: Icon(Icons.message),
+      //                   onPressed: () => controller.gotoComments(
+      //                     photoMemoList[index].photoURL,
+      //                   ),
+      //                 ),
+      //               ],
+      //             )
+      //           ]),
+      //         ),
+      //       ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection(Constant.PHOTO_MEMO_COLLECTION)
+            .where(PhotoMemo.SHARED_WITH, arrayContains: user.email)
+            .orderBy(PhotoMemo.TIMESTAMP, descending: true)
+            .snapshots(),
+        builder: (ctx, publishedPhotosSnapshot) {
+          if (publishedPhotosSnapshot.connectionState ==
+              ConnectionState.waiting) {
+            return Container();
+          }
+          if (publishedPhotosSnapshot.hasData) {
+            final publishedPhotos = publishedPhotosSnapshot.data.docs;
+            if (publishedPhotos.length == 0) {
+              return Center(
+                child: Text(
+                  'Empty',
+                  style: TextStyle(
+                    fontSize: 70,
+                    color: Colors.white24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    'Title: ${photoMemoList[index].title}',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Text(
-                    'Memo: ${photoMemoList[index].memo}',
-                    // style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Text(
-                    'Created By: ${photoMemoList[index].createdBy}',
-                    // style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Text(
-                    'Updated At: ${photoMemoList[index].timestamp}',
-                    // style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Text(
-                    'Shared With: ${photoMemoList[index].sharedWith}',
-                    // style: Theme.of(context).textTheme.headline6,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      FutureBuilder(
-                        future:
-                            controller.getNumberOfComments(photoMemoList[index].photoURL),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data > 0) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.red,
-                                ),
-                                child: Text(
-                                  ' ${snapshot.data.toString()} ',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              );
-                            } else {
-                              return SizedBox(
-                                height: 1,
-                              );
-                            }
-                          } else {
-                            return SizedBox(
-                              height: 1,
-                            );
-                          }
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.message),
-                        onPressed: () => controller.gotoComments(
-                          photoMemoList[index].photoURL,
-                        ),
-                      ),
-                    ],
-                  )
-                ]),
-              ),
-            ),
+                ),
+              );
+            } else
+              return ListView.builder(
+                  itemCount: publishedPhotos.length,
+                  // reverse: true,
+                  itemBuilder: (ctx, index) => PhotoTile(PhotoMemo.deserialize(
+                      publishedPhotos[index].data(),
+                      publishedPhotos[index].id)));
+          }
+          print(publishedPhotosSnapshot.error.toString());
+          return Text(publishedPhotosSnapshot.error.toString());
+        },
+      ),
     );
   }
 }

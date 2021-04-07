@@ -130,12 +130,24 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           if (publishedPhotosSnapshot.hasData) {
             final publishedPhotos = publishedPhotosSnapshot.data.docs;
-
-            return ListView.builder(
-                itemCount: publishedPhotos.length,
-                // reverse: true,
-                itemBuilder: (ctx, index) => PhotoTile(PhotoMemo.deserialize(
-                    publishedPhotos[index].data(), publishedPhotos[index].id)));
+            if (publishedPhotos.length == 0) {
+              return Center(
+                child: Text(
+                  'Empty',
+                  style: TextStyle(
+                    fontSize: 70,
+                    color: Colors.white24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            } else
+              return ListView.builder(
+                  itemCount: publishedPhotos.length,
+                  // reverse: true,
+                  itemBuilder: (ctx, index) => PhotoTile(PhotoMemo.deserialize(
+                      publishedPhotos[index].data(),
+                      publishedPhotos[index].id)));
           }
           print(publishedPhotosSnapshot.error.toString());
           return Text(publishedPhotosSnapshot.error.toString());
