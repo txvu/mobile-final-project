@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          'Photo Memos',
+          'PHOTO MEMOS',
           style: TextStyle(fontFamily: 'Lobster', fontSize: 28.0),
         ),
         // shape: RoundedRectangleBorder(
