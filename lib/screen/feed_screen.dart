@@ -22,6 +22,30 @@ class _FeedScreenState extends State<FeedScreen> {
   _Controller controller;
   GlobalKey<FormState> formKey = GlobalKey();
 
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text(
+      'Index 0: Home',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 1: Business',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 2: School',
+      style: optionStyle,
+    ),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -94,7 +118,8 @@ class _FeedScreenState extends State<FeedScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0, right: 10.0, left: 10.0),
+                      padding: const EdgeInsets.only(
+                          top: 10.0, right: 10.0, left: 10.0),
                       child: Row(
                         children: [
                           Icon(
@@ -148,12 +173,12 @@ class _FeedScreenState extends State<FeedScreen> {
                       child: Text(
                         publishedPhotos[index].data()[PhotoMemo.TITLE],
                         style: TextStyle(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.white70, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 3.0, right: 10.0, left: 10.0),
+                      padding: const EdgeInsets.only(
+                          top: 3.0, right: 10.0, left: 10.0),
                       child: Text(
                         publishedPhotos[index]
                                 .data()[PhotoMemo.MEMO]
@@ -168,7 +193,8 @@ class _FeedScreenState extends State<FeedScreen> {
                       child: Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                            padding:
+                                const EdgeInsets.only(right: 8.0, left: 8.0),
                             child: Row(
                               children: [
                                 Text(
@@ -178,14 +204,18 @@ class _FeedScreenState extends State<FeedScreen> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.thumb_up_alt_outlined, color: Colors.blue,),
+                                  icon: Icon(
+                                    Icons.thumb_up_alt_outlined,
+                                    color: Colors.blue,
+                                  ),
                                   onPressed: () {},
                                 ),
                               ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                            padding:
+                                const EdgeInsets.only(right: 8.0, left: 8.0),
                             child: Row(
                               children: [
                                 Text(
@@ -195,14 +225,18 @@ class _FeedScreenState extends State<FeedScreen> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.insert_comment_outlined, color: Colors.blue,),
+                                  icon: Icon(
+                                    Icons.insert_comment_outlined,
+                                    color: Colors.blue,
+                                  ),
                                   onPressed: () {},
                                 ),
                               ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                            padding:
+                                const EdgeInsets.only(right: 8.0, left: 8.0),
                             child: Row(
                               children: [
                                 Text(
@@ -212,7 +246,10 @@ class _FeedScreenState extends State<FeedScreen> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.share_outlined, color: Colors.blue,),
+                                  icon: Icon(
+                                    Icons.share_outlined,
+                                    color: Colors.blue,
+                                  ),
                                   onPressed: () {},
                                 ),
                               ],
@@ -229,6 +266,25 @@ class _FeedScreenState extends State<FeedScreen> {
           print(publishedPhotosSnapshot.error.toString());
           return Text(publishedPhotosSnapshot.error.toString());
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'My Photo',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_add_outlined),
+            label: 'Share With Me',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber,
+        onTap: _onItemTapped,
       ),
     );
   }
