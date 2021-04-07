@@ -13,7 +13,7 @@ class _MyPublishToggleButtonState extends State<MyPublishToggleButton> {
     return ToggleButtons(
       borderRadius: BorderRadius.circular(30.0),
       borderColor: Colors.white38,
-      selectedBorderColor: Colors.white38,
+      selectedBorderColor: Colors.blue,
       borderWidth: 1.0,
       selectedColor: Colors.blue,
       textStyle: TextStyle(color: Colors.white12, fontSize: 12.0,),
