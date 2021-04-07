@@ -45,7 +45,10 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
     photoMemoList = [];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add PhotoMemo'),
+        title: Text(
+          'ADD     PHOTO MEMO',
+          style: TextStyle(fontFamily: 'Lobster', fontSize: 20.0),
+        ),
         actions: [
           IconButton(icon: Icon(Icons.check), onPressed: controller.save),
         ],

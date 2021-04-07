@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(
           'PHOTO MEMOS',
-          style: TextStyle(fontFamily: 'Lobster', fontSize: 28.0),
+          style: TextStyle(fontFamily: 'Lobster', fontSize: 20.0),
         ),
         // shape: RoundedRectangleBorder(
         //   borderRadius: BorderRadius.vertical(

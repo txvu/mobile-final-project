@@ -44,39 +44,13 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
     // photoMemoList ??= args[Constant.ARG_PHOTOMEMOLIST];
     photoMemoList = [];
 
-    void _onItemTapped(int index) {
-      switch (index) {
-        case 0:
-          setState(() {
-            _selectedIndex = index;
-          });
-          Navigator.of(context).pushNamed(HomeScreen.routeName);
-          break;
-        case 1:
-          setState(() {
-            _selectedIndex = index;
-          });
-          Navigator.of(context).pushNamed(AddPhotoMemoScreen.routeName);
-          break;
-        case 2:
-          setState(() {
-            _selectedIndex = index;
-          });
-          Navigator.of(context).pushNamed(UserHomeScreen.routeName);
-          break;
-        case 3:
-          setState(() {
-            _selectedIndex = index;
-          });
-          Navigator.of(context).pushNamed(SharedWithScreen.routeName);
-          break;
-      }
-    }
-
     return Scaffold(
       // backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Shared With Me'),
+        title: Text(
+          'SHARED     WITH     ME',
+          style: TextStyle(fontFamily: 'Lobster', fontSize: 20.0),
+        ),
       ),
       drawer: MyDrawer(),
       bottomNavigationBar: MyBottomNavigationBar(3),
