@@ -1,5 +1,5 @@
 import 'package:cmsc4303_lesson3/provider/reference.dart';
-import 'package:cmsc4303_lesson3/screen/feed_screen.dart';
+import 'package:cmsc4303_lesson3/screen/home_screen.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_comments_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +76,7 @@ class Lesson3 extends StatelessWidget {
                           return CircularProgressIndicator();
                         }
                         if (userSnapshot.hasData) {
-                          return FeedScreen();
+                          return HomeScreen();
                         }
                         return SignInScreen();
                       }),
@@ -88,7 +88,7 @@ class Lesson3 extends StatelessWidget {
                 DetailedViewScreen.routeName: (context) => DetailedViewScreen(),
                 SharedWithScreen.routeName: (context) => SharedWithScreen(),
                 SharedWithComments.routeName: (context) => SharedWithComments(),
-                FeedScreen.routeName: (context) => FeedScreen(),
+                HomeScreen.routeName: (context) => HomeScreen(),
               },
             ),
           );

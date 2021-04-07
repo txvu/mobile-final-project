@@ -70,25 +70,6 @@ class _SharedWithCommentsState extends State<SharedWithComments> {
                       context: context,
                     ),
                   ),
-                  // controller.comments.length > 0
-                  //     ? Container(
-                  //         height: MediaQuery.of(context).size.height * 0.4,
-                  //         padding: EdgeInsets.all(8.0),
-                  //         child: ListView.builder(
-                  //           itemCount: controller.comments.length,
-                  //           itemBuilder: (BuildContext context, int index) =>
-                  //               Container(
-                  //             color: Colors.white10,
-                  //             margin: EdgeInsets.only(bottom: 5.0),
-                  //             child: ListTile(
-                  //               title: Text(controller.comments[index].comments),
-                  //               subtitle:
-                  //                   Text(controller.comments[index].createdBy),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       )
-                  //     : Text('No comment'),
                   FutureBuilder(
                     future: controller.getMessages(photoUrl),
                     builder: (context, snapshot) {
