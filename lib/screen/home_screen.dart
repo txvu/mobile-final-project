@@ -4,15 +4,17 @@ import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_comment.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:cmsc4303_lesson3/screen/addphotomeno_screen.dart';
-import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
+import 'package:cmsc4303_lesson3/widget/my_bottom_navigation_bar.dart';
+import 'package:cmsc4303_lesson3/widget/my_dialog.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
 import 'package:cmsc4303_lesson3/screen/signup_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
+import 'package:cmsc4303_lesson3/widget/my_drawer.dart';
 import 'package:cmsc4303_lesson3/widget/photo_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'myview/my_image.dart';
+import '../widget/my_image.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/feed_screen';
@@ -44,35 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   ];
 
-  void _onItemTapped(int index) {
-    switch (index) {
-      case 0:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.of(context).pushNamed(HomeScreen.routeName);
-        break;
-      case 1:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.of(context).pushNamed(AddPhotoMemoScreen.routeName);
-        break;
-      case 2:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.of(context).pushNamed(UserHomeScreen.routeName);
-        break;
-      case 3:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.of(context).pushNamed(SharedWithScreen.routeName);
-        break;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -91,32 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(fontFamily: 'Lobster', fontSize: 28.0),
         ),
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            UserAccountsDrawerHeader(
-              currentAccountPicture: Icon(Icons.person, size: 100.0),
-              // accountName: Text(user.displayName ?? 'N/A'),
-              // accountEmail: Text(user.email),
-            ),
-            ListTile(
-              leading: Icon(Icons.people),
-              title: Text('Shared With Me'),
-              onTap: null,
-            ),
-            ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text('Sign Out'),
-              onTap: controller.signOut,
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: null,
-            ),
-          ],
-        ),
-      ),
+      drawer: MyDrawer(),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('photo_memos')
@@ -153,29 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return Text(publishedPhotosSnapshot.error.toString());
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_a_photo_outlined),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'My Photo',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_add_outlined),
-            label: 'Share With Me',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: MyBottomNavigationBar(0),
     );
   }
 }

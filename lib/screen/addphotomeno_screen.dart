@@ -4,9 +4,11 @@ import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:cmsc4303_lesson3/screen/home_screen.dart';
-import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
+import 'package:cmsc4303_lesson3/widget/my_bottom_navigation_bar.dart';
+import 'package:cmsc4303_lesson3/widget/my_dialog.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
+import 'package:cmsc4303_lesson3/widget/my_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,36 +27,6 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
   GlobalKey<FormState> formKey = GlobalKey();
   File photo;
   String progressMessage;
-  int _selectedIndex = 1;
-
-  void _onItemTapped(int index) {
-    switch (index) {
-      case 0:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.of(context).pushNamed(HomeScreen.routeName);
-        break;
-      case 1:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.of(context).pushNamed(AddPhotoMemoScreen.routeName);
-        break;
-      case 2:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.of(context).pushNamed(UserHomeScreen.routeName);
-        break;
-      case 3:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.of(context).pushNamed(SharedWithScreen.routeName);
-        break;
-    }
-  }
 
   @override
   void initState() {
@@ -76,113 +48,95 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
           IconButton(icon: Icon(Icons.check), onPressed: controller.save),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_a_photo_outlined),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'My Photo',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_add_outlined),
-            label: 'Share With Me',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        onTap: _onItemTapped,
-      ),
+      drawer: MyDrawer(),
+      bottomNavigationBar: MyBottomNavigationBar(1),
       body: Form(
         key: formKey,
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    child: photo == null
-                        ? Icon(Icons.photo_library, size: 300)
-                        : Image.file(
-                            photo,
-                            fit: BoxFit.fill,
-                          ),
-                  ),
-                  Positioned(
-                    right: 0.0,
-                    bottom: 0.0,
-                    child: Container(
-                      color: Colors.blue[200],
-                      child: PopupMenuButton<String>(
-                        onSelected: controller.getPhoto,
-                        itemBuilder: (context) => <PopupMenuEntry<String>>[
-                          PopupMenuItem(
-                            child: Row(
-                              children: [
-                                Icon(Icons.photo_camera),
-                                Text(Constant.SRC_CAMERA),
-                              ],
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      child: photo == null
+                          ? Icon(Icons.photo_library, size: 300)
+                          : Image.file(
+                              photo,
+                              fit: BoxFit.fill,
                             ),
-                            value: Constant.SRC_CAMERA,
-                          ),
-                          PopupMenuItem(
-                            child: Row(
-                              children: [
-                                Icon(Icons.photo_album),
-                                Text(Constant.SRC_GALLERY),
-                              ],
+                    ),
+                    Positioned(
+                      right: 0.0,
+                      bottom: 0.0,
+                      child: Container(
+                        color: Colors.blue[200],
+                        child: PopupMenuButton<String>(
+                          onSelected: controller.getPhoto,
+                          itemBuilder: (context) => <PopupMenuEntry<String>>[
+                            PopupMenuItem(
+                              child: Row(
+                                children: [
+                                  Icon(Icons.photo_camera),
+                                  Text(Constant.SRC_CAMERA),
+                                ],
+                              ),
+                              value: Constant.SRC_CAMERA,
                             ),
-                            value: Constant.SRC_GALLERY,
-                          ),
-                        ],
+                            PopupMenuItem(
+                              child: Row(
+                                children: [
+                                  Icon(Icons.photo_album),
+                                  Text(Constant.SRC_GALLERY),
+                                ],
+                              ),
+                              value: Constant.SRC_GALLERY,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
+                  ],
+                ),
+                progressMessage == null
+                    ? SizedBox(
+                        height: 1.0,
+                      )
+                    : Text(
+                        progressMessage,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Title',
                   ),
-                ],
-              ),
-              progressMessage == null
-                  ? SizedBox(
-                      height: 1.0,
-                    )
-                  : Text(
-                      progressMessage,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Title',
+                  autocorrect: true,
+                  validator: PhotoMemo.validateTitle,
+                  onSaved: controller.saveTitle,
                 ),
-                autocorrect: true,
-                validator: PhotoMemo.validateTitle,
-                onSaved: controller.saveTitle,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Memo',
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Memo',
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 6,
+                  autocorrect: true,
+                  validator: PhotoMemo.validateMemo,
+                  onSaved: controller.saveMemo,
                 ),
-                keyboardType: TextInputType.multiline,
-                maxLines: 6,
-                autocorrect: true,
-                validator: PhotoMemo.validateMemo,
-                onSaved: controller.saveMemo,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Shared With (comma separated email list)',
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Shared With (comma separated email list)',
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  maxLines: 2,
+                  validator: PhotoMemo.validateSharedWith,
+                  onSaved: controller.saveSharedWith,
                 ),
-                keyboardType: TextInputType.emailAddress,
-                maxLines: 2,
-                validator: PhotoMemo.validateSharedWith,
-                onSaved: controller.saveSharedWith,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

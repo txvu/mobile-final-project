@@ -3,7 +3,9 @@ import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
 import 'package:cmsc4303_lesson3/screen/addphotomeno_screen.dart';
 import 'package:cmsc4303_lesson3/screen/home_screen.dart';
-import 'package:cmsc4303_lesson3/screen/myview/my_image.dart';
+import 'package:cmsc4303_lesson3/widget/my_bottom_navigation_bar.dart';
+import 'package:cmsc4303_lesson3/widget/my_drawer.dart';
+import 'package:cmsc4303_lesson3/widget/my_image.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_comments_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
 import 'package:cmsc4303_lesson3/widget/photo_tile.dart';
@@ -76,29 +78,8 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
       appBar: AppBar(
         title: Text('Shared With Me'),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_a_photo_outlined),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'My Photo',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_add_outlined),
-            label: 'Share With Me',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        onTap: _onItemTapped,
-      ),
+      drawer: MyDrawer(),
+      bottomNavigationBar: MyBottomNavigationBar(3),
       // body: photoMemoList.length == 0
       //     ? Text(
       //         'No PhotoMemos shared with me.',

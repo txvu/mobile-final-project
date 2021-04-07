@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
-import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
-import 'package:cmsc4303_lesson3/screen/myview/my_image.dart';
+import 'package:cmsc4303_lesson3/widget/my_dialog.dart';
+import 'package:cmsc4303_lesson3/widget/my_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
