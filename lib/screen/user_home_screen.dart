@@ -35,7 +35,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Widget build(BuildContext context) {
     Map args = ModalRoute.of(context).settings.arguments;
     // user ??= agrs[Constant.ARG_USER];
-    photoMemoList ??= args[Constant.ARG_PHOTOMEMOLIST];
+    // photoMemoList ??= args[Constant.ARG_PHOTOMEMOLIST];
+    photoMemoList = [];
     return WillPopScope(
       onWillPop: () => Future.value(false), // Disable android back button
       child: Scaffold(

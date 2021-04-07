@@ -32,8 +32,9 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
   @override
   Widget build(BuildContext context) {
     Map args = ModalRoute.of(context).settings.arguments;
-    user ??= args[Constant.ARG_USER];
-    photoMemoList ??= args[Constant.ARG_PHOTOMEMOLIST];
+    user = FirebaseAuth.instance.currentUser;
+    // photoMemoList ??= args[Constant.ARG_PHOTOMEMOLIST];
+    photoMemoList = [];
 
     return Scaffold(
       appBar: AppBar(

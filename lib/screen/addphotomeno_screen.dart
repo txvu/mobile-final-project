@@ -33,8 +33,9 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map args = ModalRoute.of(context).settings.arguments;
-    photoMemoList ??= args[Constant.ARG_PHOTOMEMOLIST];
+    // Map args = ModalRoute.of(context).settings.arguments;
+    // photoMemoList ??= args[Constant.ARG_PHOTOMEMOLIST];
+    photoMemoList = [];
     return Scaffold(
       appBar: AppBar(
         title: Text('Add PhotoMemo'),

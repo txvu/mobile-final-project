@@ -3,7 +3,9 @@ import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_comment.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
+import 'package:cmsc4303_lesson3/screen/addphotomeno_screen.dart';
 import 'package:cmsc4303_lesson3/screen/myview/my_dialog.dart';
+import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
 import 'package:cmsc4303_lesson3/screen/signup_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
 import 'package:cmsc4303_lesson3/widget/photo_tile.dart';
@@ -43,7 +45,33 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   void _onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        setState(() {
+          _selectedIndex = index;
+        });
+        break;
+      case 1:
+        setState(() {
+          _selectedIndex = index;
+        });
+        Navigator.of(context).pushNamed(AddPhotoMemoScreen.routeName);
+        break;
+      case 2:
+        setState(() {
+          _selectedIndex = index;
+        });
+        Navigator.of(context).pushNamed(UserHomeScreen.routeName);
+        break;
+      case 3:
+        setState(() {
+          _selectedIndex = index;
+        });
+        Navigator.of(context).pushNamed(SharedWithScreen.routeName);
+        break;
+    }
     setState(() {
+      print('you chose $index');
       _selectedIndex = index;
     });
   }
@@ -107,11 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
             final publishedPhotos = publishedPhotosSnapshot.data.docs;
 
             return ListView.builder(
-              itemCount: publishedPhotos.length,
-              // reverse: true,
-              itemBuilder: (ctx, index) =>
-                  PhotoTile(PhotoMemo.deserialize(publishedPhotos[index].data(), publishedPhotos[index].id))
-            );
+                itemCount: publishedPhotos.length,
+                // reverse: true,
+                itemBuilder: (ctx, index) => PhotoTile(PhotoMemo.deserialize(
+                    publishedPhotos[index].data(), publishedPhotos[index].id)));
           }
           print(publishedPhotosSnapshot.error.toString());
           return Text(publishedPhotosSnapshot.error.toString());
@@ -122,6 +149,10 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_a_photo_outlined),
+            label: 'Add',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
