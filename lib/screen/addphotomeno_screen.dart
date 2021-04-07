@@ -9,6 +9,8 @@ import 'package:cmsc4303_lesson3/widget/my_dialog.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
 import 'package:cmsc4303_lesson3/widget/my_drawer.dart';
+import 'package:cmsc4303_lesson3/widget/my_ml_toggle_button.dart';
+import 'package:cmsc4303_lesson3/widget/my_publish_toggle_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -60,7 +62,7 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
                 Container(
                   height: MediaQuery.of(context).size.height * 0.4,
                   child: photo == null
-                      ? Container(
+                      ? Center(
                           child: PopupMenuButton<String>(
                             icon: Icon(
                               Icons.add,
@@ -103,6 +105,16 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
                         progressMessage,
                         style: Theme.of(context).textTheme.headline6,
                       ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MyMLToggleButton(),
+                    MyPublishToggleButton(),
+                  ],
+                ),
                 SizedBox(
                   height: 10.0,
                 ),
