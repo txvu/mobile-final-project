@@ -240,7 +240,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  '2',
+                                  publishedPhotos[index].data()[PhotoMemo.SHARED_WITH].toString().split(RegExp('(,| )+')).map((e) => e.trim()).toList().length.toString(),
                                   style: TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.bold),
@@ -283,7 +283,7 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber,
+        selectedItemColor: Colors.white,
         onTap: _onItemTapped,
       ),
     );
