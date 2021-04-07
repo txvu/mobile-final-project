@@ -57,12 +57,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      // backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
           'Photo Memos',
           style: TextStyle(fontFamily: 'Lobster', fontSize: 28.0),
         ),
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.vertical(
+        //     bottom: Radius.circular(30),
+        //   ),
+        // ),
       ),
       drawer: MyDrawer(),
       body: StreamBuilder(

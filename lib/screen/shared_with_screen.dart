@@ -74,7 +74,7 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      // backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Shared With Me'),
       ),

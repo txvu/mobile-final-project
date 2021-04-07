@@ -57,48 +57,43 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             child: Column(
               children: [
-                Stack(
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      child: photo == null
-                          ? Icon(Icons.photo_library, size: 300)
-                          : Image.file(
-                              photo,
-                              fit: BoxFit.fill,
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: photo == null
+                      ? Container(
+                          child: PopupMenuButton<String>(
+                            icon: Icon(
+                              Icons.add,
+                              color: Colors.blue,
+                              size: 70,
                             ),
-                    ),
-                    Positioned(
-                      right: 0.0,
-                      bottom: 0.0,
-                      child: Container(
-                        color: Colors.blue[200],
-                        child: PopupMenuButton<String>(
-                          onSelected: controller.getPhoto,
-                          itemBuilder: (context) => <PopupMenuEntry<String>>[
-                            PopupMenuItem(
-                              child: Row(
-                                children: [
-                                  Icon(Icons.photo_camera),
-                                  Text(Constant.SRC_CAMERA),
-                                ],
+                            onSelected: controller.getPhoto,
+                            itemBuilder: (context) => <PopupMenuEntry<String>>[
+                              PopupMenuItem(
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.photo_camera),
+                                    Text(Constant.SRC_CAMERA),
+                                  ],
+                                ),
+                                value: Constant.SRC_CAMERA,
                               ),
-                              value: Constant.SRC_CAMERA,
-                            ),
-                            PopupMenuItem(
-                              child: Row(
-                                children: [
-                                  Icon(Icons.photo_album),
-                                  Text(Constant.SRC_GALLERY),
-                                ],
+                              PopupMenuItem(
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.photo_album),
+                                    Text(Constant.SRC_GALLERY),
+                                  ],
+                                ),
+                                value: Constant.SRC_GALLERY,
                               ),
-                              value: Constant.SRC_GALLERY,
-                            ),
-                          ],
+                            ],
+                          ),
+                        )
+                      : Image.file(
+                          photo,
+                          fit: BoxFit.fill,
                         ),
-                      ),
-                    ),
-                  ],
                 ),
                 progressMessage == null
                     ? SizedBox(
@@ -108,17 +103,33 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
                         progressMessage,
                         style: Theme.of(context).textTheme.headline6,
                       ),
+                SizedBox(
+                  height: 10.0,
+                ),
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: 'Title',
+                    labelText: 'Title',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                    ),
+                    // fillColor: Colors.black12,
+                    // filled: true,
                   ),
                   autocorrect: true,
                   validator: PhotoMemo.validateTitle,
                   onSaved: controller.saveTitle,
                 ),
+                SizedBox(
+                  height: 10.0,
+                ),
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: 'Memo',
+                    labelText: 'Memo',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                    ),
                   ),
                   keyboardType: TextInputType.multiline,
                   maxLines: 6,
@@ -126,9 +137,16 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
                   validator: PhotoMemo.validateMemo,
                   onSaved: controller.saveMemo,
                 ),
+                SizedBox(
+                  height: 10.0,
+                ),
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: 'Shared With (comma separated email list)',
+                    labelText: 'Shared With (comma separated email list)',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                    ),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   maxLines: 2,
@@ -176,7 +194,8 @@ class _Controller {
 
       // image labels by ML
       state.render(() => state.progressMessage = 'ML Image Labeler Started!');
-      List<dynamic> imageLabels = await FirebaseController.getImageLabels(photoFile: state.photo);
+      List<dynamic> imageLabels =
+          await FirebaseController.getImageLabels(photoFile: state.photo);
       state.render(() => state.progressMessage = null);
 
       tempMemo.photoFileName = photoInfo[Constant.ARG_FILE_NAME];

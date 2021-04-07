@@ -76,7 +76,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     return WillPopScope(
       onWillPop: () => Future.value(false), // Disable android back button
       child: Scaffold(
-        backgroundColor: Colors.black,
+        // backgroundColor: Colors.black,
         appBar: AppBar(
           // title: Text('User Home'),
 

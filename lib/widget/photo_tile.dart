@@ -28,7 +28,7 @@ class _PhotoTileState extends State<PhotoTile> {
     return Card(
       shape: RoundedRectangleBorder(
         side: BorderSide(color: Colors.white30, width: 1.0),
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.circular(30.0),
       ),
       color: Colors.white12,
       child: Column(
@@ -69,7 +69,7 @@ class _PhotoTileState extends State<PhotoTile> {
           ),
           Container(
             height: MediaQuery.of(context).size.width,
-            color: Colors.black,
+            // color: Colors.black,
             margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
             child: Center(
               child: MyImage.network(
