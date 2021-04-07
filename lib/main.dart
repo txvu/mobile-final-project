@@ -59,7 +59,7 @@ class Lesson3 extends StatelessWidget {
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
-              title: 'FlutterChat',
+              title: 'Flutter',
               theme: ThemeData(
                 brightness: Brightness.dark,
                 primaryColor: Colors.amber,
