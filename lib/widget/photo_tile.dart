@@ -202,7 +202,6 @@ class _PhotoTileState extends State<PhotoTile> {
                                     color: Colors.blue,
                                     fontWeight: FontWeight.normal),
                               );
-                              ;
                             }
                             if (commentsSnapshot.hasData) {
                               final comments = commentsSnapshot.data.docs;
@@ -237,13 +236,7 @@ class _PhotoTileState extends State<PhotoTile> {
                     children: [
                       GestureDetector(
                         child: Text(
-                          _photoMemo.sharedWith
-                              .toString()
-                              .split(RegExp('(,| )+'))
-                              .map((e) => e.trim())
-                              .toList()
-                              .length
-                              .toString(),
+                          _photoMemo.sharedWith.length.toString(),
                           style: TextStyle(
                               color: Colors.blue, fontWeight: FontWeight.normal),
                         ),
