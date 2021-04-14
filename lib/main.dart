@@ -54,7 +54,7 @@ class Lesson3 extends StatelessWidget {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(
-                create: (_) => ReferencesProvider(),
+                create: (_) => Reference(),
               ),
             ],
             child: MaterialApp(

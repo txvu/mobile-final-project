@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cmsc4303_lesson3/controller/firebase_controller.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
+import 'package:cmsc4303_lesson3/provider/reference.dart';
 import 'package:cmsc4303_lesson3/screen/home_screen.dart';
 import 'package:cmsc4303_lesson3/widget/my_bottom_navigation_bar.dart';
 import 'package:cmsc4303_lesson3/widget/my_dialog.dart';
@@ -10,10 +11,11 @@ import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
 import 'package:cmsc4303_lesson3/screen/user_home_screen.dart';
 import 'package:cmsc4303_lesson3/widget/my_drawer.dart';
 import 'package:cmsc4303_lesson3/widget/my_ml_toggle_button.dart';
-import 'package:cmsc4303_lesson3/widget/my_publish_toggle_button.dart';
+import 'package:cmsc4303_lesson3/widget/my_pubic_toggle_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddPhotoMemoScreen extends StatefulWidget {
   static const routeName = '/addphotomeno_screen';
@@ -223,6 +225,7 @@ class _Controller {
       tempMemo.timestamp = DateTime.now();
       tempMemo.createdBy = state.user.email;
       tempMemo.imageLabels = imageLabels;
+      tempMemo.isPublic = Provider.of<Reference>(state.context, listen: false).makePublic;
       String tempDocId = await FirebaseController.addPhotoMemo(tempMemo);
       tempMemo.docId = tempDocId;
       state.photoMemoList.insert(0, tempMemo);

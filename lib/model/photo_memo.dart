@@ -5,7 +5,7 @@ class PhotoMemo {
   String memo;
   String photoFileName;
   String photoURL;
-  bool isPublished;
+  bool isPublic;
   DateTime timestamp;
   List<dynamic> sharedWith; // list of email
   List<dynamic> imageLabels; // identify by ML
@@ -19,7 +19,7 @@ class PhotoMemo {
   static const TIMESTAMP = 'timestamp';
   static const SHARED_WITH = 'shared_with';
   static const IMAGE_LABELS = 'image_label';
-  static const IS_PUBLISHED = 'is_published';
+  static const IS_PUBLIC = 'is_public';
 
   PhotoMemo(
       {this.docId,
@@ -29,7 +29,7 @@ class PhotoMemo {
       this.photoFileName,
       this.photoURL,
       this.timestamp,
-        this.isPublished,
+        this.isPublic,
       this.sharedWith,
       this.imageLabels}) {
     this.sharedWith ??= [];
@@ -45,7 +45,7 @@ class PhotoMemo {
       PHOTO_URL: this.photoURL,
       PHOTO_FILENAME: this.photoFileName,
       TIMESTAMP: this.timestamp,
-      IS_PUBLISHED: this.isPublished,
+      IS_PUBLIC: this.isPublic,
       SHARED_WITH: this.sharedWith,
       IMAGE_LABELS: this.imageLabels,
     };
@@ -64,7 +64,7 @@ class PhotoMemo {
       timestamp: doc[TIMESTAMP] == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(doc[TIMESTAMP].millisecondsSinceEpoch),
-      isPublished: doc[IS_PUBLISHED] ??= false,
+      isPublic: doc[IS_PUBLIC] ??= false,
     );
   }
 
@@ -102,7 +102,7 @@ class PhotoMemo {
     this.photoFileName = photoMemo.photoFileName;
     this.photoURL = photoMemo.photoURL;
     this.timestamp = photoMemo.timestamp;
-    this.isPublished = photoMemo.isPublished;
+    this.isPublic = photoMemo.isPublic;
 
     this.sharedWith = [];
     this.sharedWith.addAll(photoMemo.sharedWith);
@@ -118,7 +118,7 @@ class PhotoMemo {
     this.photoFileName = photoMemo.photoFileName;
     this.photoURL = photoMemo.photoURL;
     this.timestamp = photoMemo.timestamp;
-    this.isPublished = photoMemo.isPublished;
+    this.isPublic = photoMemo.isPublic;
 
     this.sharedWith.clear();
     this.sharedWith.addAll(photoMemo.sharedWith);
