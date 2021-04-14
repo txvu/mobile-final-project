@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
         stream: FirebaseFirestore.instance
             .collection(Constant.PHOTO_MEMO_COLLECTION)
             .where(PhotoMemo.IS_PUBLIC, isEqualTo: true)
-            .orderBy(PhotoMemo.TIMESTAMP, descending: false)
+            .orderBy(PhotoMemo.TIMESTAMP, descending: true)
             .snapshots(),
         builder: (ctx, publishedPhotosSnapshot) {
           if (publishedPhotosSnapshot.connectionState ==

@@ -254,7 +254,13 @@ class _PhotoTileState extends State<PhotoTile> {
                           color: Colors.blue,
                           size: 16.0,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          MyPopup.info(context: context, title: 'Share', content: _photoMemo.sharedWith
+                              .toString()
+                              .split(RegExp('(,| )+'))
+                              .map((e) => e.trim())
+                              .toList());
+                        },
                       ),
                     ],
                   ),
