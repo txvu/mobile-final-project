@@ -15,9 +15,7 @@ class MyPopup {
         title: Text(
           title,
           style: TextStyle(
-              color: Colors.white70,
-              fontWeight: FontWeight.bold,
-              fontSize: 14.0),
+              color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 14.0),
         ),
         content: Container(
           height: MediaQuery.of(context).size.height * 0.1,
