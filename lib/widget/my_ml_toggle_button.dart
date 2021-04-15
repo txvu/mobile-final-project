@@ -6,7 +6,7 @@ class MyMLToggleButton extends StatefulWidget {
 }
 
 class _MyMLToggleButtonState extends State<MyMLToggleButton> {
-  List<bool> isSelected = [true, false];
+  List<bool> isSelected = [false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +29,11 @@ class _MyMLToggleButtonState extends State<MyMLToggleButton> {
       ],
       onPressed: (int index) {
         setState(() {
+          for (int i = 0; i < isSelected.length; i++) {
+            if (i != index && isSelected[i] == true) {
+              isSelected[i] = false;
+            }
+          }
           isSelected[index] = !isSelected[index];
         });
       },
