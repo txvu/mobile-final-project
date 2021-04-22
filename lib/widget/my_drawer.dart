@@ -3,6 +3,7 @@ import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/screen/detailedview_screen.dart';
 import 'package:cmsc4303_lesson3/screen/shared_with_screen.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
+import 'package:cmsc4303_lesson3/screen/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -79,8 +80,8 @@ class _Controller {
     } catch (e) {
       // do nothing
     }
-    Navigator.of(state.context).pop();
-    Navigator.of(state.context).pop();
+    Navigator.of(state.context).pushNamed(SignInScreen.routeName);
+    // Navigator.of(state.context).pop();
   }
 
   void onTap(int index) async {

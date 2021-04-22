@@ -51,8 +51,8 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          label: 'Home',
+          icon: Icon(Icons.public),
+          label: 'Public',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.add_a_photo_outlined),

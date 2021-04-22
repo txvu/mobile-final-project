@@ -77,9 +77,9 @@ class PhotoMemo {
   }
 
   static String validateMemo(String value) {
-    // if (value == null || value.length < 5)
-    //   return 'too short';
-    // else
+    if (value == null || value.length < 5)
+      return 'too short';
+    else
       return null;
   }
 

@@ -76,7 +76,7 @@ class Lesson3 extends StatelessWidget {
                           return CircularProgressIndicator();
                         }
                         if (userSnapshot.hasData) {
-                          return HomeScreen();
+                          return UserHomeScreen();
                         }
                         return SignInScreen();
                       }),
