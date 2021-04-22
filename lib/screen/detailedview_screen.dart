@@ -216,7 +216,7 @@ class _Controller {
         // image labels by ML
         state.onePhotoMemoTemp.photoURL = photoInfo[Constant.ARG_DOWNLOAD_URL];
         state.render(() => state.progressMessage = 'ML Image Labeler Started!');
-        List<dynamic> imageLabels = await FirebaseController.getImageLabels(photoFile: photoFile);
+        List<dynamic> imageLabels = await FirebaseController.getImageLabelsWithImageLabeler(photoFile: photoFile);
         state.onePhotoMemoTemp.imageLabels = imageLabels;
         state.render(() => state.progressMessage = null);
 

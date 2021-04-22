@@ -103,7 +103,7 @@ class FirebaseController {
     return result;
   }
 
-  static Future<List<dynamic>> getImageLabels({@required File photoFile}) async {
+  static Future<List<dynamic>> getImageLabelsWithImageLabeler({@required File photoFile}) async {
     final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(photoFile);
     final ImageLabeler cloudLabeler = FirebaseVision.instance.cloudImageLabeler();
     final List<ImageLabel> cloudLabels = await cloudLabeler.processImage(visionImage);
@@ -117,18 +117,18 @@ class FirebaseController {
   }
 
 
-  static Future<String> getImageMemo({@required File photoFile}) async {
+  static Future<List<dynamic>> getImageLabelsWithTextRecognizer({@required File photoFile}) async {
     final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(photoFile);
     final TextRecognizer cloudTextRecognizer = FirebaseVision.instance.cloudTextRecognizer();
     final VisionText visionText = await cloudTextRecognizer.processImage(visionImage);
-    // List<dynamic> labels = <dynamic>[];
-    // for (VisionText label in cloudLabels) {
-    //   if (visionText.confidence >= Constant.MIN_ML_CONFIDENCE) {
-    //     labels.add(label.text.toLowerCase());
-    //   }
+    List<dynamic> labels = <dynamic>[];
+    labels.add(visionText.text.toLowerCase());
+    // List<dynamic> list = visionText.text.split(RegExp('(,| \n)+')).map((e) => e.trim().replaceAll('\n', ' ').toLowerCase()).toList();
+    // for (String label in list) {
+    //     labels.add(label.toLowerCase());
     // }
-    print('vision text: ${visionText.text.replaceAll('\n', ' ')}');
-    return visionText.text.replaceAll('\n', ' ');
+    // print('vision text: ${visionText.text.replaceAll('\n', ' ')}');
+    return labels;
   }
 
   static Future<void> updatePhotoFile(

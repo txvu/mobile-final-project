@@ -215,21 +215,20 @@ class _Controller {
         },
       );
 
-      List<dynamic> imageLabels = [];
+      List<dynamic> imageLabels = <dynamic>[];
 
       // image labels by ML
       if (Provider.of<Reference>(state.context, listen: false)
           .enableImageLabeler) {
         state.render(() => state.progressMessage = 'ML Image Labeler Started!');
         imageLabels =
-            await FirebaseController.getImageLabels(photoFile: state.photo);
+            await FirebaseController.getImageLabelsWithImageLabeler(photoFile: state.photo);
       } else if (Provider.of<Reference>(state.context, listen: false)
           .enableTextRecognizer) {
         state.render(
             () => state.progressMessage = 'ML Text Recognizer Started!');
-        visionText =
-            await FirebaseController.getImageMemo(photoFile: state.photo);
-        tempMemo.memo = visionText;
+        imageLabels =
+            await FirebaseController.getImageLabelsWithTextRecognizer(photoFile: state.photo);
       }
 
       state.render(() => state.progressMessage = null);
@@ -251,12 +250,15 @@ class _Controller {
 
       Navigator.pop(state.context);
     } catch (e) {
-      MyDialog.circularProgressStop(state.context);
-      MyDialog.info(
-        context: state.context,
-        title: 'Save PhotoMemo Error',
-        content: '$e',
-      );
+      print(e);
+      // MyDialog.circularProgressStop(state.context);
+      // MyDialog.info(
+      //   context: state.context,
+      //   title: 'Save PhotoMemo Error',
+      //   content: '$e',
+      // );
+      save();
+      Navigator.pop(state.context);
     }
   }
 
@@ -265,12 +267,7 @@ class _Controller {
   }
 
   void saveMemo(String value) {
-    // if (visionText != '') {
-    //   tempMemo.memo = visionText;
-    // } else {
       tempMemo.memo = value;
-    // }
-    print('temp memo: ${tempMemo.memo}');
   }
 
   void saveSharedWith(String value) {

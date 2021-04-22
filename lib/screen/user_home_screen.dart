@@ -176,31 +176,66 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               .where(PhotoMemo.CREATED_BY, isEqualTo: user.email)
               .orderBy(PhotoMemo.TIMESTAMP, descending: true)
               .snapshots(),
-          builder: (ctx, publishedPhotosSnapshot) {
+          builder: (BuildContext ctx, AsyncSnapshot<dynamic> publishedPhotosSnapshot) {
             if (publishedPhotosSnapshot.connectionState ==
                 ConnectionState.waiting) {
               return Container();
             }
             if (publishedPhotosSnapshot.hasData) {
               final publishedPhotos = publishedPhotosSnapshot.data.docs;
-              if (publishedPhotos.length == 0) {
-                return Center(
-                  child: Text(
-                    'Empty',
-                    style: TextStyle(
-                      fontSize: 70,
-                      color: Colors.white24,
-                      fontWeight: FontWeight.bold,
+
+              if (controller.keyString != '') {
+              List<dynamic> searchingPhotos = [];
+                publishedPhotos.forEach((e) {
+                  print(controller.keyString);
+                  print(e.data()[PhotoMemo.IMAGE_LABELS]);
+                  e.data()[PhotoMemo.IMAGE_LABELS].forEach((label) {
+                    if (label.contains(controller.keyString)) {
+                      searchingPhotos.add(e);
+                    }
+                  });
+                });
+
+                if (searchingPhotos.length == 0) {
+                  return Center(
+                    child: Text(
+                      'Empty',
+                      style: TextStyle(
+                        fontSize: 70,
+                        color: Colors.white24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                );
-              } else
-                return ListView.builder(
-                    itemCount: publishedPhotos.length,
-                    // reverse: true,
-                    itemBuilder: (ctx, index) => PhotoTile(
-                        PhotoMemo.deserialize(publishedPhotos[index].data(),
-                            publishedPhotos[index].id)));
+                  );
+                } else
+                  return ListView.builder(
+                      itemCount: searchingPhotos.length,
+                      // reverse: true,
+                      itemBuilder: (ctx, index) => PhotoTile(
+                          PhotoMemo.deserialize(searchingPhotos[index].data(),
+                              searchingPhotos[index].id)));
+              } else {
+                publishedPhotos.forEach((e) => print(e.data()[PhotoMemo.IMAGE_LABELS]));
+                if (publishedPhotos.length == 0) {
+                  return Center(
+                    child: Text(
+                      'Empty',
+                      style: TextStyle(
+                        fontSize: 70,
+                        color: Colors.white24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                } else
+                  return ListView.builder(
+                      itemCount: publishedPhotos.length,
+                      // reverse: true,
+                      itemBuilder: (ctx, index) => PhotoTile(
+                          PhotoMemo.deserialize(publishedPhotos[index].data(),
+                              publishedPhotos[index].id)));
+              }
+
             }
             print(publishedPhotosSnapshot.error.toString());
             return Text(publishedPhotosSnapshot.error.toString());
@@ -214,7 +249,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 class _Controller {
   _UserHomeScreenState state;
   int delIndex;
-  String keyString;
+  String keyString = '';
 
   _Controller(this.state);
 
