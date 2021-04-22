@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cmsc4303_lesson3/model/constant.dart';
 import 'package:cmsc4303_lesson3/model/photo_comment.dart';
 import 'package:cmsc4303_lesson3/model/photo_memo.dart';
+import 'package:cmsc4303_lesson3/screen/detailedview_screen.dart';
 import 'package:cmsc4303_lesson3/widget/my_image.dart';
 import 'package:cmsc4303_lesson3/widget/my_popup.dart';
 import 'package:cmsc4303_lesson3/widget/comment_widget.dart';
@@ -66,16 +67,21 @@ class _PhotoTileState extends State<PhotoTile> {
               ],
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.width,
-            // color: Colors.black,
-            margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-            child: Center(
-              child: MyImage.network(
-                url: _photoMemo.photoURL,
-                context: context,
+          GestureDetector(
+            child: Container(
+              height: MediaQuery.of(context).size.width,
+              // color: Colors.black,
+              margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+              child: Center(
+                child: MyImage.network(
+                  url: _photoMemo.photoURL,
+                  context: context,
+                ),
               ),
             ),
+            onTap: () {
+              Navigator.of(context).pushNamed(DetailedViewScreen.routeName, arguments: _photoMemo);
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(right: 10.0, left: 10.0),

@@ -38,9 +38,9 @@ class _DetailedViewState extends State<DetailedViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map args = ModalRoute.of(context).settings.arguments;
-    user ??= args[Constant.ARG_USER];
-    onePhotoMemoOriginal ??= args[Constant.ARG_ONE_PHOTOMEMO];
+    var args = ModalRoute.of(context).settings.arguments;
+    user = FirebaseAuth.instance.currentUser;
+    onePhotoMemoOriginal ??= args;
     onePhotoMemoTemp ??= PhotoMemo.clone(onePhotoMemoOriginal);
 
     return Scaffold(
