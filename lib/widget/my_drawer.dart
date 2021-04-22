@@ -49,6 +49,7 @@ class _MyDrawerState extends State<MyDrawer> {
             onTap: () async {
               try {
                 await FirebaseController.signOut();
+                Navigator.of(context).pushNamed(SignInScreen.routeName);
               } catch (e) {
                 // do nothing
               }
