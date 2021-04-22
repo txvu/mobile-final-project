@@ -51,8 +51,7 @@ class _PhotoTileState extends State<PhotoTile> {
                     children: [
                       Text(
                         'User:' + _photoMemo.createdBy.split('@')[0],
-                        style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         _photoMemo.createdBy,
@@ -82,14 +81,15 @@ class _PhotoTileState extends State<PhotoTile> {
             padding: const EdgeInsets.only(right: 10.0, left: 10.0),
             child: Text(
               _photoMemo.title,
-              style:
-                  TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 3.0, right: 10.0, left: 10.0),
             child: Text(
-              _photoMemo.memo.length >= 50 ? _photoMemo.memo.substring(0, 50) + '...' : _photoMemo.memo,
+              _photoMemo.memo.length >= 50
+                  ? _photoMemo.memo.substring(0, 50) + '...'
+                  : _photoMemo.memo,
               style: TextStyle(color: Colors.grey),
             ),
           ),
@@ -113,8 +113,7 @@ class _PhotoTileState extends State<PhotoTile> {
                               return Text(
                                 '.',
                                 style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold),
+                                    color: Colors.blue, fontWeight: FontWeight.bold),
                               );
                               ;
                             }
@@ -134,14 +133,12 @@ class _PhotoTileState extends State<PhotoTile> {
                       StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection('photo_likes')
-                            .where(PhotoComment.PHOTO_URL,
-                                isEqualTo: _photoMemo.photoURL)
+                            .where(PhotoComment.PHOTO_URL, isEqualTo: _photoMemo.photoURL)
                             .where('liked_by', isEqualTo: _user.email)
                             .snapshots(), // async work
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            final List<DocumentSnapshot> likes =
-                                snapshot.data.docs;
+                            final List<DocumentSnapshot> likes = snapshot.data.docs;
                             if (likes.length > 0) {
                               return IconButton(
                                 icon: Icon(
@@ -199,8 +196,7 @@ class _PhotoTileState extends State<PhotoTile> {
                               return Text(
                                 '.',
                                 style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.normal),
+                                    color: Colors.blue, fontWeight: FontWeight.normal),
                               );
                             }
                             if (commentsSnapshot.hasData) {
@@ -209,8 +205,7 @@ class _PhotoTileState extends State<PhotoTile> {
                               return Text(
                                 comments.length.toString(),
                                 style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.normal),
+                                    color: Colors.blue, fontWeight: FontWeight.normal),
                               );
                             }
                             return Text('error');
@@ -241,11 +236,14 @@ class _PhotoTileState extends State<PhotoTile> {
                               color: Colors.blue, fontWeight: FontWeight.normal),
                         ),
                         onTap: () {
-                            MyPopup.info(context: context, title: 'Share', content: _photoMemo.sharedWith
-                                .toString()
-                                .split(RegExp('(,| )+'))
-                                .map((e) => e.trim())
-                                .toList());
+                          MyPopup.info(
+                              context: context,
+                              title: 'Share',
+                              content: _photoMemo.sharedWith
+                                  .toString()
+                                  .split(RegExp('(,| )+'))
+                                  .map((e) => e.trim())
+                                  .toList());
                         },
                       ),
                       IconButton(
@@ -255,11 +253,14 @@ class _PhotoTileState extends State<PhotoTile> {
                           size: 16.0,
                         ),
                         onPressed: () {
-                          MyPopup.info(context: context, title: 'Share', content: _photoMemo.sharedWith
-                              .toString()
-                              .split(RegExp('(,| )+'))
-                              .map((e) => e.trim())
-                              .toList());
+                          MyPopup.info(
+                              context: context,
+                              title: 'Shares',
+                              content: _photoMemo.sharedWith
+                                  .toString()
+                                  .split(RegExp('(,| )+'))
+                                  .map((e) => e.trim())
+                                  .toList());
                         },
                       ),
                     ],
@@ -268,9 +269,7 @@ class _PhotoTileState extends State<PhotoTile> {
               ],
             ),
           ),
-          _showComments == false
-              ? SizedBox(height: 1)
-              : CommentWidget(_photoMemo),
+          _showComments == false ? SizedBox(height: 1) : CommentWidget(_photoMemo),
         ],
       ),
     );
