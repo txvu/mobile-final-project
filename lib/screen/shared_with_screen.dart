@@ -48,96 +48,12 @@ class _SharedWithScreenState extends State<SharedWithScreen> {
       // backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          'SHARED     WITH     ME',
+          'SHARED WITH ME',
           style: TextStyle(fontFamily: 'Lobster', fontSize: 20.0),
         ),
       ),
       drawer: MyDrawer(),
       bottomNavigationBar: MyBottomNavigationBar(3),
-      // body: photoMemoList.length == 0
-      //     ? Text(
-      //         'No PhotoMemos shared with me.',
-      //         style: Theme.of(context).textTheme.headline5,
-      //       )
-      //     : ListView.builder(
-      //         itemCount: photoMemoList.length,
-      //         itemBuilder: (context, index) => Card(
-      //           elevation: 7.0,
-      //           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      //             Center(
-      //               child: Container(
-      //                 height: MediaQuery.of(context).size.height * 0.4,
-      //                 child: MyImage.network(
-      //                   url: photoMemoList[index].photoURL,
-      //                   context: context,
-      //                 ),
-      //               ),
-      //             ),
-      //             Text(
-      //               'Title: ${photoMemoList[index].title}',
-      //               style: Theme.of(context).textTheme.headline6,
-      //             ),
-      //             Text(
-      //               'Memo: ${photoMemoList[index].memo}',
-      //               // style: Theme.of(context).textTheme.headline6,
-      //             ),
-      //             Text(
-      //               'Created By: ${photoMemoList[index].createdBy}',
-      //               // style: Theme.of(context).textTheme.headline6,
-      //             ),
-      //             Text(
-      //               'Updated At: ${photoMemoList[index].timestamp}',
-      //               // style: Theme.of(context).textTheme.headline6,
-      //             ),
-      //             Text(
-      //               'Shared With: ${photoMemoList[index].sharedWith}',
-      //               // style: Theme.of(context).textTheme.headline6,
-      //             ),
-      //             Row(
-      //               mainAxisAlignment: MainAxisAlignment.end,
-      //               children: [
-      //                 FutureBuilder(
-      //                   future:
-      //                       controller.getNumberOfComments(photoMemoList[index].photoURL),
-      //                   builder: (context, snapshot) {
-      //                     if (snapshot.hasData) {
-      //                       if (snapshot.data > 0) {
-      //                         return Container(
-      //                           decoration: BoxDecoration(
-      //                             borderRadius: BorderRadius.circular(5),
-      //                             color: Colors.red,
-      //                           ),
-      //                           child: Text(
-      //                             ' ${snapshot.data.toString()} ',
-      //                             style: TextStyle(
-      //                                 color: Colors.white,
-      //                                 fontSize: 14.0,
-      //                                 fontWeight: FontWeight.bold),
-      //                           ),
-      //                         );
-      //                       } else {
-      //                         return SizedBox(
-      //                           height: 1,
-      //                         );
-      //                       }
-      //                     } else {
-      //                       return SizedBox(
-      //                         height: 1,
-      //                       );
-      //                     }
-      //                   },
-      //                 ),
-      //                 IconButton(
-      //                   icon: Icon(Icons.message),
-      //                   onPressed: () => controller.gotoComments(
-      //                     photoMemoList[index].photoURL,
-      //                   ),
-      //                 ),
-      //               ],
-      //             )
-      //           ]),
-      //         ),
-      //       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection(Constant.PHOTO_MEMO_COLLECTION)

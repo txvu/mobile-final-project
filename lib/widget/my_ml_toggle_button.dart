@@ -26,7 +26,7 @@ class _MyMLToggleButtonState extends State<MyMLToggleButton> {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 15.0),
-          child: Text('Text\nRecognition'),
+          child: Text('Text\nRecognizer'),
         ),
       ],
       onPressed: (int index) {
@@ -38,9 +38,9 @@ class _MyMLToggleButtonState extends State<MyMLToggleButton> {
           }
           isSelected[index] = !isSelected[index];
           Provider.of<Reference>(context, listen: false).enableImageLabeler = isSelected[0];
-          Provider.of<Reference>(context, listen: false).enableTextRecognition = isSelected[1];
+          Provider.of<Reference>(context, listen: false).enableTextRecognizer = isSelected[1];
           print('enableImageLabeler: ${Provider.of<Reference>(context, listen: false).enableImageLabeler}');
-          print('enableTextRecognition: ${Provider.of<Reference>(context, listen: false).enableTextRecognition}');
+          print('enableTextRecognition: ${Provider.of<Reference>(context, listen: false).enableTextRecognizer}');
         });
       },
       isSelected: isSelected,

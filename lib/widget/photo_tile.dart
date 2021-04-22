@@ -175,7 +175,7 @@ class _PhotoTileState extends State<PhotoTile> {
                               );
                             }
                           } else {
-                            return Text('Its Error!');
+                            return Text('Error!');
                           }
                         },
                       ),

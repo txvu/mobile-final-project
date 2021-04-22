@@ -116,6 +116,21 @@ class FirebaseController {
     return labels;
   }
 
+
+  static Future<String> getImageMemo({@required File photoFile}) async {
+    final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(photoFile);
+    final TextRecognizer cloudTextRecognizer = FirebaseVision.instance.cloudTextRecognizer();
+    final VisionText visionText = await cloudTextRecognizer.processImage(visionImage);
+    // List<dynamic> labels = <dynamic>[];
+    // for (VisionText label in cloudLabels) {
+    //   if (visionText.confidence >= Constant.MIN_ML_CONFIDENCE) {
+    //     labels.add(label.text.toLowerCase());
+    //   }
+    // }
+    print('vision text: ${visionText.text.replaceAll('\n', ' ')}');
+    return visionText.text.replaceAll('\n', ' ');
+  }
+
   static Future<void> updatePhotoFile(
     String docId,
     Map<String, dynamic> updateInfo,

@@ -48,7 +48,7 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'ADD     PHOTO MEMO',
+          'ADD PHOTO',
           style: TextStyle(fontFamily: 'Lobster', fontSize: 20.0),
         ),
         actions: [
@@ -155,7 +155,6 @@ class _AddPhotoMemoScreenState extends State<AddPhotoMemoScreen> {
                   autocorrect: true,
                   validator: PhotoMemo.validateMemo,
                   onSaved: controller.saveMemo,
-
                 ),
                 SizedBox(
                   height: 10.0,
@@ -191,6 +190,8 @@ class _Controller {
 
   PhotoMemo tempMemo = PhotoMemo();
 
+  String visionText = '';
+
   void save() async {
     if (!state.formKey.currentState.validate()) return;
     state.formKey.currentState.save();
@@ -214,10 +215,23 @@ class _Controller {
         },
       );
 
+      List<dynamic> imageLabels = [];
+
       // image labels by ML
-      state.render(() => state.progressMessage = 'ML Image Labeler Started!');
-      List<dynamic> imageLabels =
-          await FirebaseController.getImageLabels(photoFile: state.photo);
+      if (Provider.of<Reference>(state.context, listen: false)
+          .enableImageLabeler) {
+        state.render(() => state.progressMessage = 'ML Image Labeler Started!');
+        imageLabels =
+            await FirebaseController.getImageLabels(photoFile: state.photo);
+      } else if (Provider.of<Reference>(state.context, listen: false)
+          .enableTextRecognizer) {
+        state.render(
+            () => state.progressMessage = 'ML Text Recognizer Started!');
+        visionText =
+            await FirebaseController.getImageMemo(photoFile: state.photo);
+        tempMemo.memo = visionText;
+      }
+
       state.render(() => state.progressMessage = null);
 
       tempMemo.photoFileName = photoInfo[Constant.ARG_FILE_NAME];
@@ -225,10 +239,13 @@ class _Controller {
       tempMemo.timestamp = DateTime.now();
       tempMemo.createdBy = state.user.email;
       tempMemo.imageLabels = imageLabels;
-      tempMemo.isPublic = Provider.of<Reference>(state.context, listen: false).makePublic;
+      tempMemo.isPublic =
+          Provider.of<Reference>(state.context, listen: false).makePublic;
       String tempDocId = await FirebaseController.addPhotoMemo(tempMemo);
       tempMemo.docId = tempDocId;
       state.photoMemoList.insert(0, tempMemo);
+
+      // state.formKey.currentState.save();
 
       MyDialog.circularProgressStop(state.context);
 
@@ -248,7 +265,12 @@ class _Controller {
   }
 
   void saveMemo(String value) {
-    tempMemo.memo = value;
+    // if (visionText != '') {
+    //   tempMemo.memo = visionText;
+    // } else {
+      tempMemo.memo = value;
+    // }
+    print('temp memo: ${tempMemo.memo}');
   }
 
   void saveSharedWith(String value) {

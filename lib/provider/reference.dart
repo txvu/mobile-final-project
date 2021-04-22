@@ -6,5 +6,5 @@ class Reference extends ChangeNotifier {
 
   bool makePublic = false;
   bool enableImageLabeler = false;
-  bool enableTextRecognition = false;
+  bool enableTextRecognizer = false;
 }

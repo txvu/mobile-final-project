@@ -29,7 +29,7 @@ class PhotoMemo {
       this.photoFileName,
       this.photoURL,
       this.timestamp,
-        this.isPublic,
+      this.isPublic,
       this.sharedWith,
       this.imageLabels}) {
     this.sharedWith ??= [];
@@ -63,7 +63,8 @@ class PhotoMemo {
       imageLabels: doc[IMAGE_LABELS],
       timestamp: doc[TIMESTAMP] == null
           ? null
-          : DateTime.fromMillisecondsSinceEpoch(doc[TIMESTAMP].millisecondsSinceEpoch),
+          : DateTime.fromMillisecondsSinceEpoch(
+              doc[TIMESTAMP].millisecondsSinceEpoch),
       isPublic: doc[IS_PUBLIC] ??= false,
     );
   }
@@ -76,15 +77,16 @@ class PhotoMemo {
   }
 
   static String validateMemo(String value) {
-    if (value == null || value.length < 5)
-      return 'too short';
-    else
+    // if (value == null || value.length < 5)
+    //   return 'too short';
+    // else
       return null;
   }
 
   static String validateSharedWith(String value) {
     if (value == null || value.trim().length == 0) return null;
-    List<String> emailList = value.split(RegExp('(,| )+')).map((e) => e.trim()).toList();
+    List<String> emailList =
+        value.split(RegExp('(,| )+')).map((e) => e.trim()).toList();
     for (String email in emailList) {
       if (email.contains('@') && email.contains('.'))
         continue;
